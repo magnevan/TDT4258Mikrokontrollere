@@ -2,63 +2,119 @@
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/fs.h>
-#include <linux/types.h>
 #include <linux/cdev.h>
 #include <linux/ioport.h>
+#include <linux/device.h>
+#include <linux/moduleparam.h>
+#include <linux/kdev_t.h>
+#include <asm/io.h>
+#include <asm/uaccess.h>
+#include <asm/signal.h>
+#include <asm/siginfo.h>
+#include <linux/interrupt.h>
 
 #include "efm32gg.h"
 
 #define GPIO_LENGTH = 0x120
+#define GPIO_EVEN_IRQ_LINE 17
+#define GPIO_ODD_IRQ_LINE 18
 
- /* For now, we can just have this as a standalone variable */
-struct cdev gamepad_cdev;
+/* Prototypes */
+static int __init gamepad_init(void);
+static void __exit gamepad_exit(void);
+static int gamepad_open(struct inode*, struct file*);
+static int gamepad_release(struct inode*, struct file*);
+static int gamepad_read(struct file*, char __user*, size_t, loff_t*);
+static int gamepad_write(struct file*, char __user*, size_t, loff_t*);
+static irqreturn_t gpio_interrupt(int, void*, struct pt_regs*);
+static int gamepad_fasync(int, struct file*, int mode);
 
- static struct file_operations gamepad_fops =
- {
+static struct file_operations gamepad_fops =
+{
     .owner = THIS_MODULE,
     .open = gamepad_open,
     .read = gamepad_read,
     .write = gamepad_write,
     .release = gamepad_release,
- }
+}
  
- /* The allocated device number, mayor and minor */
 dev_t dev_num;
- 
+struct cdev gamepad_cdev;
 struct class *cl;
+struct fasync_struct* async_queue;
 
+/* Memory pointers */
 void *gpio_pc;
+void *gpio_ex;
  
 static int __init gamepad_init(void)
 {
-   /* TODO magne err handling */
+    /* TODO magne err handling */
 
-   /* Allocate device region w/number */
-   alloc_chrdev_region(&dev_num, 0, 1, "gamepad");
-   
-   /* Request memory region */
-   request_mem_region(GPIO_PC_BASE, GPIO_LENGTH, "gamepad");
-   gpio_pc = ioremap_nocache(GPIO_PC_BASE, GPIO_LENGTH);
-    
-   /* Register device in the system (NOTE: do last)*/
-   cdev_init(&gamepad_cdev, &gamepad_fops);
-   gamepad_cdev.owner = THIS_MODULE;
-   gamepad_cdev.ops = &gamepad_fops;
-   cdev_add(&gamepad_cdev, dev_num, 1);
-   
-   /* Making the driver visible to user space */
-   cl = class_create(THIS_MODULE, "gamepad");
-   device_create(cl, NULL, dev_num, NULL, "gamepad");
-    
-   printk(KERN_INFO "Gamepad kernel module initialized\n");
-   return 0;
+    /* Allocate device region w/number */
+    alloc_chrdev_region(&dev_num, 0, 1, "gamepad");
+
+    /* Request memory region */
+    request_mem_region(GPIO_PC_BASE, GPIO_Px_LEN, "gamepad");
+    gpio_pc = ioremap_nocache(GPIO_PC_BASE, GPIO_Px_LEN);
+    request_mem_region(GPIO_EX_BASE, GPIO_EX_LEN, "gamepad");
+    gpio_ex = ioremap_nocache(GPIO_EX_BASE, GPIO_EX_LEN);
+
+    /* Init GPIO */
+    iowrite32(0x33333333, gpio_pc + GPIO_Px_MODEL);
+    iowrite8 (0xFF, gpio_pc + GPIO_Px_DOUT);
+    iowrite32(0x22222222, gpio_ex + GPIO_EXTIPSELL);
+
+    /* Setup interrupt lines */
+    request_irq(
+        GPIO_EVEN_IRQ_LINE, 
+        (irq_handler_t) gpio_interrupt, 
+        0, "gamepad", &gamepad_cdev
+    );
+    request_irq(
+        GPIO_ODD_IRQ_LINE, 
+        (irq_handler_t) gpio_interrupt, 
+        0, "gamepad", &gamepad_cdev
+    );
+
+    /* Enable interrupts */
+    iowrite32(0xFF, gpio_ex + GPIO_EXTIFALL);
+    iowrite32(0x00FF, gpio_ex + GPIO_IEN);
+    iowrite32(0xFF, gpio_ex + GPIO_IFC);
+
+    /* Register device in the system */
+    cdev_init(&gamepad_cdev, &gamepad_fops);
+    gamepad_cdev.owner = THIS_MODULE;
+    gamepad_cdev.ops = &gamepad_fops;
+    cdev_add(&gamepad_cdev, dev_num, 1);
+
+    /* Making the driver visible to user space */
+    cl = class_create(THIS_MODULE, "gamepad");
+    device_create(cl, NULL, dev_num, NULL, "gamepad");
+
+    printk(KERN_INFO "Gamepad kernel module initialized\n");
+    return 0;
 }
 
-static void __exit gamepad_cleanup(void)
+static void __exit gamepad_exit(void)
 {
+    /* disable interrupt */
+    iowrite(0x0000, gpio_ex + GPIO_IEN);
+
+    /* irq */
+    free_irq(GPIO_EVEN_IRQ_LINE, &gamepad_cdev);
+    free_irq(GPIO_ODD_IRQ_LINE, &gamepad_cdev);
+
+    /* memory */
     iounmap(gpio_pc);
     release_mem_region(GPIO_PC_BASE, GPIO_LENGTH);
+
+    /* device */
+    device_destroy(cl, dev_num) ;
+    class_destroy(cl);
     cdev_del(&gamepad_cdev);
+
+    /* device num */
     unregister_chrdev_region(dev_num, 1);
     
     
@@ -74,7 +130,7 @@ static int gamepad_read(
     size_t count, loff_t *offp
 ) {
     /* GPIO_PC_DIN */
-    unsigned int button_state = ioread8(gpio_pc + 0x1c);
+    uint32_t button_state = ioread32(gpio_pc + 0x1c);
     copy_to_user(buff, &button_state, 1);
     return 1;
 }
@@ -85,6 +141,23 @@ static int gamepad_write(
 ) {
     return 1;
 }
+
+static irqreturn_t gpio_interrupt(int irq, void* dev_id, struct pt_regs* regs)
+{
+    printk(KERN_INFO "GPIO interrupt\n");
+    if (async_queue) {
+        kill_fasync(&async_queue, SIGIO, POLL_IN);
+    }
+    /* clear interrupt */
+    iowrite(ioread32(gpio_ex + GPIO_IF), gpio_ex + GPIO_IFC);
+    return IRQ_HANDLED;
+}
+
+static int gamepad_fasync(int fd, struct file* filp, int mode)
+{
+    return fasync_helper(fd, filp, mode, &async_queue);
+}
+
 
 module_init(gamepad_init);
 module_exit(gamepad_cleanup);
