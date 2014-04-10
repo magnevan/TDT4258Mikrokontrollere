@@ -15,7 +15,6 @@
 
 #include "efm32gg.h"
 
-#define GPIO_LENGTH = 0x120
 #define GPIO_EVEN_IRQ_LINE 17
 #define GPIO_ODD_IRQ_LINE 18
 
@@ -24,8 +23,8 @@ static int __init gamepad_init(void);
 static void __exit gamepad_exit(void);
 static int gamepad_open(struct inode*, struct file*);
 static int gamepad_release(struct inode*, struct file*);
-static int gamepad_read(struct file*, char __user*, size_t, loff_t*);
-static int gamepad_write(struct file*, char __user*, size_t, loff_t*);
+static ssize_t gamepad_read(struct file*, char* __user, size_t, loff_t*);
+static ssize_t gamepad_write(struct file*, char* __user, size_t, loff_t*);
 static irqreturn_t gpio_interrupt(int, void*, struct pt_regs*);
 static int gamepad_fasync(int, struct file*, int mode);
 
@@ -34,18 +33,19 @@ static struct file_operations gamepad_fops =
     .owner = THIS_MODULE,
     .open = gamepad_open,
     .read = gamepad_read,
-    .write = gamepad_write,
+    /*.write = gamepad_write,*/
     .release = gamepad_release,
-}
+    .fasync = gamepad_fasync,
+};
  
-dev_t dev_num;
-struct cdev gamepad_cdev;
-struct class *cl;
-struct fasync_struct* async_queue;
+static dev_t dev_num;
+static struct cdev gamepad_cdev;
+static struct class *cl;
+static struct fasync_struct* async_queue;
 
 /* Memory pointers */
-void *gpio_pc;
-void *gpio_ex;
+static void* gpio_pc;
+static void* gpio_ex;
  
 static int __init gamepad_init(void)
 {
@@ -99,7 +99,7 @@ static int __init gamepad_init(void)
 static void __exit gamepad_exit(void)
 {
     /* disable interrupt */
-    iowrite(0x0000, gpio_ex + GPIO_IEN);
+    iowrite32(0x0000, gpio_ex + GPIO_IEN);
 
     /* irq */
     free_irq(GPIO_EVEN_IRQ_LINE, &gamepad_cdev);
@@ -107,7 +107,7 @@ static void __exit gamepad_exit(void)
 
     /* memory */
     iounmap(gpio_pc);
-    release_mem_region(GPIO_PC_BASE, GPIO_LENGTH);
+    release_mem_region(GPIO_PC_BASE, GPIO_Px_LEN);
 
     /* device */
     device_destroy(cl, dev_num) ;
@@ -122,12 +122,12 @@ static void __exit gamepad_exit(void)
 }
 
 /* FOPS */
-static int gamepad_open(struct inode *inode, struct file *filp) {return 0;}
-static int gamepad_release(struct inode *inode, struct file *filp) {return 0;}
+static int gamepad_open(struct inode* inode, struct file* filp) {return 0;}
+static int gamepad_release(struct inode* inode, struct file* filp) {return 0;}
 
-static int gamepad_read(
-    struct file *filp, char __user *buff, 
-    size_t count, loff_t *offp
+static ssize_t gamepad_read(
+    struct file* filp, char* __user buff, 
+    size_t count, loff_t* offp
 ) {
     /* GPIO_PC_DIN */
     uint32_t button_state = ioread32(gpio_pc + 0x1c);
@@ -135,9 +135,9 @@ static int gamepad_read(
     return 1;
 }
 
-static int gamepad_write(
-    struct file *filp, char __user *buff, 
-    size_t count, loff_t *offp
+static ssize_t gamepad_write(
+    struct file* filp, char* __user buff, 
+    size_t count, loff_t* offp
 ) {
     return 1;
 }
@@ -149,7 +149,7 @@ static irqreturn_t gpio_interrupt(int irq, void* dev_id, struct pt_regs* regs)
         kill_fasync(&async_queue, SIGIO, POLL_IN);
     }
     /* clear interrupt */
-    iowrite(ioread32(gpio_ex + GPIO_IF), gpio_ex + GPIO_IFC);
+    iowrite32(ioread32(gpio_ex + GPIO_IF), gpio_ex + GPIO_IFC);
     return IRQ_HANDLED;
 }
 
@@ -160,7 +160,7 @@ static int gamepad_fasync(int fd, struct file* filp, int mode)
 
 
 module_init(gamepad_init);
-module_exit(gamepad_cleanup);
+module_exit(gamepad_exit);
 
 MODULE_DESCRIPTION("Kernel module for the gamepad used in TDT4258 fall 2014.");
 MODULE_LICENSE("GPL");
