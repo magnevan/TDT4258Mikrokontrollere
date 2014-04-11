@@ -12,7 +12,7 @@
   struct Player
   {
     playerType type;
-    char name[200];
+    char name[5];
     colorType color;
       };
  // public:

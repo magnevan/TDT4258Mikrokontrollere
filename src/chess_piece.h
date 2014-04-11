@@ -117,7 +117,9 @@
 
  // class ChessPieceKnight : public ChessPiece
   //{
-   const int movePatterns[4][2];
+   //const int movePatterns[4][2];
+     const int knightmovePatterns[4][2] =
+    {{-2, -1}, {-1, -2}, {1, -2}, {2,-1}};
   //public:
     //ChessPieceKnight();
     //ChessPieceKnight(colorType pcolor, Cell startpos);

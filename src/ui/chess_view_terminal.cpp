@@ -7,7 +7,7 @@
 
 #include "../chess_player.h"
 #include "chess_view_terminal.h"
-
+using namespace std;
 ChessView*  ChessViewTerm(ChessGame* gameref)
 {
 return chessview1(gameref);
@@ -118,7 +118,7 @@ return chessview1(gameref);
 
     
     i=0;
-    while(i<= tableStart;)
+    while(i<= tableStart)
     {
     printf("-");
     i++;
@@ -138,7 +138,7 @@ return chessview1(gameref);
     //cout << endl;
 
     i=1;
-    while(i<tableStart;)
+    while(i<tableStart)
     {
     printf(" ");
     i++;
@@ -150,7 +150,7 @@ return chessview1(gameref);
     while(i<8)
     {
     printf("  ");
-    printf(letter);
+    printf(&letter);
     letter++;
     i++;
     }
@@ -160,7 +160,7 @@ return chessview1(gameref);
     //cout << endl;
 
     i=0;
-    while(i<tableStart;)
+    while(i<tableStart)
     {
     printf(" ");
     i++;
@@ -182,14 +182,14 @@ return chessview1(gameref);
     {
     lightBackground = (row % 2 != 0);
     printf("\n");
-    printf(row+1);//this wont work prob
+    //printf(row+1);//this wont work prob
     j=1;
     while(j< tableStart)
     {
     printf(" ");
     j++;
     }
-    print('|');
+    printf("|");
     col=0;
     while(col<8)
     {
@@ -198,9 +198,9 @@ return chessview1(gameref);
      color = (piece != 0 ? getColor(piece) : BLACK);//check this
       b_colorcode = (lightBackground ? "100" : "40");
       printf("\033[97;");
-      printf(b_colorcode);
+     // printf(b_colorcode);
       printf("m ");
-      printf(pieceToString(type, color));//check this too
+     // printf(pieceToString(type, color));//check this too
       printf(" \033[0m|");
       if(lightBackground==1)
       lightBackground = 0;
@@ -312,7 +312,7 @@ return chessview1(gameref);
   void invalidCell(std::string msg, Cell* cell)
   {
     std::stringstream ss;
-    ss << char(cell.colum + 65) << cell.rowum + 1 << ": " << msg;
+    ss << char((*cell).colum + 65) << (*cell).rowum + 1 << ": " << msg;
     printErrorMsg(ss.str());
   }
 
@@ -374,8 +374,8 @@ return chessview1(gameref);
              << (pieceChosen ? " (Leave prompt empty to abort.): " : ": ");      
       }
               Cell* cell2=(Cell*) malloc(sizeof(Cell));
-                      (*cell).rowum=row;
-        (*cell).colum=col;
+                      (*cell2).rowum=row;
+        (*cell2).colum=col;
       return cell2;
     }
   }

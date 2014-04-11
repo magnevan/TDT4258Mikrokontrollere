@@ -10,25 +10,25 @@
   bool win(ChessBoard* board, colorType lastColorMove)
   {
     colorType nextColorMove = colorType(1 - lastColorMove);
-    return isCheck(nextColorMove) && !hasMoves(board, nextColorMove);
+    return isCheck(nextColorMove, board) && !hasMoves(board, nextColorMove);
   }
 
   bool stalemate(ChessBoard* board, colorType lastColorMove)//check for remis
   {
   colorType nextColorMove;
-  if(lastColorMove==1)
-  nextColorMove=0;
+  if(lastColorMove==BLACK)
+  nextColorMove=WHITE;
   else
-  nextColorMove=1;
+  nextColorMove=BLACK;
     //colorType nextColorMove = colorType(1 - lastColorMove);
-    return !board.isCheck(nextColorMove) && !hasMoves(board, nextColorMove);
+    return !isCheck(nextColorMove,board) && !hasMoves(board, nextColorMove);
   }
 
   
   bool tie(ChessBoard* board)
   {
-    ChessPiece** piecesBlack = getPieces(BLACK);
-     ChessPiece** piecesWhite = getPieces(WHITE);//board file
+    ChessPiece** piecesBlack = getPieces(BLACK, board);
+     ChessPiece** piecesWhite = getPieces(WHITE, board);//board file
     pieceType pType;
 
     //if (piecesBlack.size() == 1 && piecesWhite.size() == 1)
@@ -36,7 +36,7 @@
       return true; // Konge mot konge
 
     //if (piecesBlack.size() == 1) {
-    if((*board).pieceslength[BLACK]==1)
+    if((*board).pieceslength[BLACK]==1){
       if ((*board).pieceslength[WHITE] == 2) {
         pType = getType(piecesWhite[1]);
         if (pType == KNIGHT || pType == BISHOP)
@@ -45,7 +45,7 @@
     } //else if (piecesWhite.size() == 1) {
     else if((*board).pieceslength[WHITE]==1){
       //if (piecesBlack.size() == 2) {
-      if(*board).pieceslength[BLACK]==2){
+      if((*board).pieceslength[BLACK]==2){
         pType =getType( piecesBlack[1]);
         if (pType == KNIGHT || pType == BISHOP)
           return true;
@@ -69,8 +69,8 @@
   bool hasMoves(ChessBoard* board, colorType color)
   {
     bool moves = false;
-    ChessPiece** pieces = getPieces(color);
-    int piecelength=(*board).pieceslength[color]
+    ChessPiece** pieces = getPieces(color,board);
+    int piecelength=(*board).pieceslength[color];
     //std::vector<ChessPiece*>::iterator it;
 int i=0;
     //for (it = pieces.begin(); it != pieces.end(); it++) {
@@ -78,7 +78,7 @@ int i=0;
     int counter=0;
     getPossibleMoves( board, pieces[i], &counter);
      // if (getPossibleMoves(board).size() > 0) {
-     if(counter>0)
+     if(counter>0){
         moves = true;
         break;
       }
@@ -99,11 +99,11 @@ int i=0;
       kingColor = getColor(pieceToMove);
 
       // Motstanders brikke som skal tas i en simulering av et trekk
-      bool capturedPiece =getPiece(to.col, to.row) != 0;
+      bool capturedPiece =getPiece(to.colum, to.rowum) != 0;
 
-      movePieceWithoutCheck(pieceToMove, to);
+      movePieceWithoutCheck(pieceToMove, to,board);
       bool check = isCheck(board, kingColor);
-      movePieceWithoutCheck(pieceToMove, from);
+      movePieceWithoutCheck(pieceToMove, from,board);
 
       if (capturedPiece) {
        placeBackLastCapturedPiece(colorType(1 - getColor(pieceToMove)),board);
@@ -113,7 +113,7 @@ int i=0;
     }
 
     kingColor =  colorType(1 - getColor(pieceToMove));
-    Cell kingPos = getPosition(getPieces(kingColor)[0]);
+    Cell kingPos = getPosition((getPieces(kingColor,board))[0]);
 
     // Sjekker om motstanderns konge er i sjakk som følge av trekket
     if (validMove(board, kingPos,pieceToMove))
@@ -256,7 +256,7 @@ int i=0;
       return false;
 
     ChessPiece * king = getPieces(kingColor,board)[0];
-    bool pawnMovesDown = (getStartPosition(king).row == 0);
+    bool pawnMovesDown = (getStartPosition(king).rowum == 0);
     ChessPiece * piece;
     pieceType type;
 
@@ -326,18 +326,18 @@ int counter=0;
   {
   if(pos.rowum==7)
   {
-  board.removePiece(pos,board);
-  board.setPiece(QUEEN, color, pos,board);
+  removePiece(pos,board);
+  setPiece(QUEEN, color, pos,board);
 
   }
   
   }
   else
   {
-  if(pos.row==0)
+  if(pos.rowum==0)
   {
-  board.removePiece(pos); 
-   board.setPiece(QUEEN, color, pos,board);
+    removePiece(pos,board); 
+    setPiece(QUEEN, color, pos,board);
   }
   
   }

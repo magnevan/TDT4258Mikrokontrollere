@@ -4,37 +4,39 @@
 #include "chess_rules.h"
 #include "chess_piece.h"
 
+
 #include <iostream>
 
 
  ChessPiece* ChessPiece1() //: type(EMPTY), color(BLACK), points(0),
                             // position(0, 0), startPosition(0, 0), moved(false)
   {
-  ChessPiece* ChessPiece1=malloc(sizeof(ChessPiece));
+  
+  ChessPiece* ChessPiece1=(ChessPiece *) malloc(sizeof(ChessPiece));
   (*ChessPiece1).type=EMPTY;
   (*ChessPiece1).color=BLACK;
   (*ChessPiece1).points=0;
-  (*ChessPiece1).position.col=0;
-  (*ChessPiece1).position.row=0;
-  (*ChessPiece1).startPosition.col=0;
-  (*ChessPiece1).startPosition.row=0;
+  (*ChessPiece1).position.colum=0;
+  (*ChessPiece1).position.rowum=0;
+  (*ChessPiece1).startPosition.colum=0;
+  (*ChessPiece1).startPosition.rowum=0;
   (*ChessPiece1).moved=0;
   return ChessPiece1;
   
   }
 
-  ChessPiece2(pieceType ptype, colorType pcolor, Cell startpos) //:
+ ChessPiece* ChessPiece2(pieceType ptype, colorType pcolor, Cell startpos) //:
    // type(ptype), color(pcolor), position(startpos), points(piece_points[ptype]),
    // startPosition(startpos), moved()
   {
-    ChessPiece* ChessPiece1=malloc(sizeof(ChessPiece));
+    ChessPiece* ChessPiece1=(ChessPiece*) malloc(sizeof(ChessPiece));
   (*ChessPiece1).type=ptype;
   (*ChessPiece1).color=pcolor;
   (*ChessPiece1).points=piece_points[ptype];//check
-  (*ChessPiece1).position.col=startpos.col;
-  (*ChessPiece1).position.row=startpos.row;
-  (*ChessPiece1).startPosition.col=startpos.col;
-  (*ChessPiece1).startPosition.row=startpos.row;
+  (*ChessPiece1).position.colum=startpos.colum;
+  (*ChessPiece1).position.rowum=startpos.rowum;
+  (*ChessPiece1).startPosition.colum=startpos.colum;
+  (*ChessPiece1).startPosition.rowum=startpos.rowum;
   (*ChessPiece1).moved=0;//maybe not ok
   return ChessPiece1;
   
@@ -113,13 +115,13 @@
     case KNIGHT:
    return validMoveKnight(board, to, piece);
     case BISHOP:
-   return validMoveBishop(board, to, piece);
+   return validMoveDiagonal(board, piece,to);
     case ROOK:
-   return validMoveRook(board, to, piece);
+   return validMoveStraight(board, piece,to);
     case QUEEN:
-   return validMoveQueen(board, to, piece);
+   return validMoveQueen(board, piece,to);
     default:
-   return validMoveKing(board, to, piece);
+   return validMoveKing(board, piece,to);
     }
   
   }

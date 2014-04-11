@@ -7,8 +7,8 @@
 #include "../chess_rules.h"
 
 
-  const int knightmovePatterns[4][2] =
-    {{-2, -1}, {-1, -2}, {1, -2}, {2,-1}};
+  /*const int knightmovePatterns[4][2] =
+    {{-2, -1}, {-1, -2}, {1, -2}, {2,-1}};*/
 
 
 
