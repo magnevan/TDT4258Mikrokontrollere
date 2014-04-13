@@ -46,6 +46,8 @@ static struct fasync_struct* async_queue;
 /* Memory pointers */
 static void* gpio_pc;
 static void* gpio_ex;
+
+static uint32_t last_input;
  
 static int __init gamepad_init(void)
 {
@@ -78,9 +80,10 @@ static int __init gamepad_init(void)
     );
 
     /* Enable interrupts */
-    iowrite32(0xFF, gpio_ex + GPIO_EXTIFALL);
-    iowrite32(0x00FF, gpio_ex + GPIO_IEN);
-    iowrite32(0xFF, gpio_ex + GPIO_IFC);
+    iowrite8(0xFF, gpio_ex + GPIO_EXTIFALL);
+    iowrite8(0x00, gpio_ex + GPIO_EXTIRISE);
+    iowrite16(0x00FF, gpio_ex + GPIO_IEN);
+    iowrite8(0xFF, gpio_ex + GPIO_IFC);
 
     /* Register device in the system */
     cdev_init(&gamepad_cdev, &gamepad_fops);
@@ -125,13 +128,20 @@ static void __exit gamepad_exit(void)
 static int gamepad_open(struct inode* inode, struct file* filp) {return 0;}
 static int gamepad_release(struct inode* inode, struct file* filp) {return 0;}
 
+/* 
+    For our purposes, a read of the gamepad equates to the last interrupt signal
+    that was triggered. The logic should be that you receive the signal, then
+    immediately do a read from the gamepad
+*/
 static ssize_t gamepad_read(
     struct file* filp, char* __user buff, 
     size_t count, loff_t* offp
 ) {
     /* GPIO_PC_DIN */
-    uint32_t button_state = ioread32(gpio_pc + 0x1c);
-    copy_to_user(buff, &button_state, 1);
+    /* uint32_t button_state = ioread32(gpio_pc + GPIO_Px_DIN); */
+    /* printk(KERN_INFO "GPIO read state\n"); */
+    /* copy_to_user(buff, &button_state, 1); */
+    copy_to_user(buff, &last_input, 1);
     return 1;
 }
 
@@ -144,12 +154,18 @@ static ssize_t gamepad_write(
 
 static irqreturn_t gpio_interrupt(int irq, void* dev_id, struct pt_regs* regs)
 {
-    printk(KERN_INFO "GPIO interrupt\n");
-    if (async_queue) {
+    /* printk(KERN_INFO "GPIO interrupt\n"); */
+    last_input = ioread8(gpio_ex + GPIO_IF);
+    uint32_t button_state = ioread8(gpio_pc + GPIO_Px_DIN) ^ 0xFF;
+    /* clear interrupt */
+    iowrite8(last_input, gpio_ex + GPIO_IFC);
+    /* For some reason, we sometimes get signals on both edges, this
+       should abort the signal when the button state does not match the
+       interrupt */
+    if (async_queue && (last_input & button_state) != 0) {
+        /* send signal */
         kill_fasync(&async_queue, SIGIO, POLL_IN);
     }
-    /* clear interrupt */
-    iowrite32(ioread32(gpio_ex + GPIO_IF), gpio_ex + GPIO_IFC);
     return IRQ_HANDLED;
 }
 
