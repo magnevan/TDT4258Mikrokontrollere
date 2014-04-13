@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
 
     short*  map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
 
-    screenclear(map,fd);
+    /* screenclear(map,fd); */
+    drawboard(map, fd);
 
     munmap(map,FILESIZE);
 
@@ -52,14 +53,13 @@ void button_handler(int signo)
 {
     int raw_input = fgetc(gamepad);
     int button = 1;
-    int test = raw_input;
 
     while (raw_input > 1) {
         raw_input >>= 1;
         button++;
     }
 
-    printf("button %d %d\n", button, test);
+    printf("button %d\n", button);
 }
 
 void init_gamepad()
@@ -84,11 +84,31 @@ int screenclear(short* map, int fd)
     while(i<=239) {
         j=1;
         while(j<=319) {
-            *(map+i*320+j)=0x0;
+            *(map+i*320+j)=0xF;
             j++;
         }
 
         i++;
+    }
+    ioctl(fd, 0x4680, &rect);
+    return 0;
+}
+
+int drawboard(short* map, int fd)
+{
+    rect.dx = 0;
+    rect.dy = 0;
+    rect.width = 240;
+    rect.height = 240;
+    int i, j, r, c;
+    short color;
+    for (i = 0; i < 240; i++) {
+        for (j = 0; j < 240; j++) {
+            r = i / 30;
+            c = j / 30;
+            color = (r%2) == (c%2) ? 0x000F : 0x0006;
+            *(map+i*320+j) = color;
+        }
     }
     ioctl(fd, 0x4680, &rect);
     return 0;
