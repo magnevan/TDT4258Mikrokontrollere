@@ -1,10 +1,11 @@
 // Kontrollert av eirik flogard
 
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <limits>
-
+//#include <string>
+//#include <iostream>
+//#include <sstream>
+//#include <limits>
+//#include <stdio.h>
+#include <string.h>
 //#include "../chess_player.h"
 #include "chess_view_terminal.h"
 using namespace std;
@@ -18,7 +19,7 @@ return chessview1(gameref);
 
   void initializeRound()
   {
-    std::cout << "\033[1mStarting a new game of chess.\033[0m" << std::endl;
+   printf("Starting a new game of chess \n");
   }
 
   void printBoard(ChessBoard* board)//this is the method used for displaying
@@ -40,19 +41,15 @@ return chessview1(gameref);
     printf("-");
     i++;
     }
-   //for (i = 0; i <= tableStart; i++)
-      //cout << "-";
-      
+
       i=0;
       while(i<8)
       {
-      cout << "----";
+      printf( "----");
       i++;
       }
-    //for (i = 0; i < 8; i++)
-      //cout << "----";
+
       printf("\n");
-    //cout << endl;
 
     i=1;
     while(i<tableStart)
@@ -60,21 +57,18 @@ return chessview1(gameref);
     printf(" ");
     i++;
     }
-    //for (i = 1; i < tableStart; i++)
-      //cout << " ";
+
     char letter = 'a';
     i=0;
     while(i<8)
     {
     printf("  ");
-    printf(&letter);
+    printf("%c", letter);
     letter++;
     i++;
     }
-    //for (i = 0; i < 8; i++)
-      //cout << "   " << letter++;
+
       printf("\n");
-    //cout << endl;
 
     i=0;
     while(i<tableStart)
@@ -82,16 +76,14 @@ return chessview1(gameref);
     printf(" ");
     i++;
     }
-   //for (i = 0; i < tableStart; i++)
-     // cout << " ";
+
      i=0;
      while(i<8)
      {
      printf(" ---");
      i++;
      }
-    //for (i = 0; i < 8; i++)
-      //cout << " ---";
+
     
     // TODO: Øverste rad må begynne fra 8
     row=7;
@@ -99,7 +91,7 @@ return chessview1(gameref);
     {
     lightBackground = (row % 2 != 0);
     printf("\n");
-    //printf(row+1);//this wont work prob
+    printf("%d",(row+1));//this wont work prob
     j=1;
     while(j< tableStart)
     {
@@ -118,7 +110,7 @@ return chessview1(gameref);
      // printf(b_colorcode);
       printf("m ");
      // printf(pieceToString(type, color));//check this too
-     cout<<pieceToString(type, color);
+     printf("%c",pieceToString(type, color));
       printf(" \033[0m|");
       if(lightBackground==1)
       lightBackground = 0;
@@ -196,21 +188,21 @@ return chessview1(gameref);
   void showValidMoves(Cell* moves, int size)
   {
     if (size == 0) {
-      printMsg("No moves are possible with that chess piece.");
+      printf("No moves are possible with that chess piece.\n");
       return;
     }
 
     Cell cell;
-    //std::vector<Cell>::iterator im;
-
-    std::cout << "Valid moves:";
+    printf("Valid moves:");
     int i=0;
-    //for (im = moves.begin(); im != moves.end(); im++ ) {
+
     while(i<size){
-      std::cout << " " << char(moves[i].colum + 65) << moves[i].rowum + 1;
+
+      printf(" %c",(moves[i].colum + 65) );
+      printf("%d", (moves[i].rowum + 1));
       i++;
     }
-    std::cout << std::endl;
+    printf("\n");
   }
 
   /*Cell ChessViewTerm::getCellWithPieceFromPlayer(ChessBoard * board,
@@ -221,85 +213,109 @@ return chessview1(gameref);
     return selectedCell;
   }*/
 
-  Cell* getCellFromPlayer(std::string msg, bool pieceChosen, ChessView* view)
+  Cell* getCellFromPlayer(char* msg, bool pieceChosen, ChessView* view)
   {
-    printMsg(msg);
+    //printMsg(msg);
+    
     return askPlayerForACell(pieceChosen);
   }
 
-  void invalidCell(std::string msg, Cell* cell)
+  void invalidCell(char* msg, Cell* cell)
   {
-    std::stringstream ss;
-    ss << char((*cell).colum + 65) << (*cell).rowum + 1 << ": " << msg;
-    printErrorMsg(ss.str());
+    //std::stringstream ss;
+    //ss << char((*cell).colum + 65) << (*cell).rowum + 1 << ": " << msg;
+   //printErrorMsg(ss.str());
+    printf("%c", ((*cell).colum + 65));
+    printf("%d", ((*cell).rowum + 1 ));
+    printf(": ");
+    printf("%s", msg);
+    
   }
 
   void pieceMoved(Player* player, Cell* from, Cell* to)
   {
-    std::stringstream ss;
-    ss << getName(player) << " moved a piece: " << char((*from).colum + 65)
-       << (*from).rowum + 1 << " to " << char((*to).colum + 65) << (*to).rowum + 1;
-    printMsg(ss.str());
+
+    printf("%s", getName(player));
+    printf(" moved a piece: ");
+    printf("%c", ((*from).colum + 65));
+    printf("%d", ((*from).rowum + 1));
+    printf(" to ");
+    printf("%c", ((*to).colum + 65));
+    printf("%d", ((*to).rowum + 1));
+    printf("\n");
   }
 
-  void printMsg(std::string msg)
+  void printMsg(char* msg)
   {
-    std::cout << msg << std::endl;
+
+    printf("%s", msg);
   }
 
-  void printErrorMsg(std::string err)
+  void printErrorMsg(char* err)
   {
-    std::cout << "\033[31m" << err << "\033[0m" << std::endl;
+    //std::cout << "\033[31m" << err << "\033[0m" << std::endl; dont bother using stderror, as consoleoutput were not a requirement
   }
 
-  Cell* askPlayerForACell(bool pieceChosen)//Dette er metoden som 
+  Cell* askPlayerForACell(bool pieceChosen)//Dette er metoden som må endres
   {
-    using std::cout;
-    using std::endl;
-    using std::cin;
-    
-    std::string squareInput;
+    //using std::cout;
+    //using std::endl;
+    //using std::cin;
+        char *s=(char*) malloc(sizeof(char)*100);
+
+    //std::string squareInput;
     int col, row;
     while (true) {
-      cout << "Enter square number (e.g. A7, G4 etc."
-           << (pieceChosen ? " Leave prompt empty to abort." : "")  << "): ";
+      //cout << "Enter square number (e.g. A7, G4 etc."
+           //<< (pieceChosen ? " Leave prompt empty to abort." : "")  << "): ";
+      printf("Enter square number (e.g. A7, G4 etc.");
+      if(pieceChosen)
+      printf(" Leave prompt empty to abort.");
+      printf("): \0");
 
-      std::string squareInput;
       bool correct = false;
       while (true) {
-        std::getline(cin, squareInput);
-        if (squareInput.size() == 2) {
-          char colInput = squareInput.at(0);
-          char rowInput = squareInput.at(1);
+      
+          scanf("%s",s);
+        if (strlen(s) == 2) {
+          char colInput = s[0];
+          char rowInput = s[1];
           if (colInput < 'A' || colInput > 'h' ||
               (colInput > 'H' && colInput < 'a')) {
-            cout << "Invalid column. Should be a character between a and h.\n";
+            printf("Invalid column. Should be a character between a and h.\n");
           } else if (rowInput < 49 || rowInput > 56) {
-            cout << "Invalid row. Should be an integer between 1 and 8.\n";
+            printf("Invalid row. Should be an integer between 1 and 8.\n");
           } else {
             col = colInput - (colInput <= 'H' ? 65 : 97);
             row = rowInput - 49;
             break;
           }
-        } else if (pieceChosen && squareInput.empty())
+        } 
+        else if (pieceChosen && strlen(s) ==0)
         {
         Cell* cell=(Cell*) malloc(sizeof(Cell));
         (*cell).rowum=-1;
         (*cell).colum=-1;
+        free(s);
           return cell; // Ugyldig celle, avslutter valget.
         }
-        cout << "Please choose a valid square"
-             << (pieceChosen ? " (Leave prompt empty to abort.): " : ": ");      
+        printf("Please choose a valid square\n");
+        if(pieceChosen)
+         printf(" (Leave prompt empty to abort.): \n");   
+         else
+         printf(": \n");
       }
               Cell* cell2=(Cell*) malloc(sizeof(Cell));
                       (*cell2).rowum=row;
         (*cell2).colum=col;
+        free(s);
       return cell2;
     }
   }
 
-  std::string pieceToString(pieceType type, colorType color)
+ const char* pieceToString(pieceType type, colorType color)
   {
+ 
     switch(type) {
     case EMPTY:
       return " ";

@@ -21,7 +21,7 @@ ChessGame* chessgame1(viewType UIType,
     // Opprettet spillere
     //players = malloc(2*sizeof(*players));//new Player[2];
 
-  (*chessgame).players[0] = Player1("Player 1", player1_type, BLACK);
+  (*chessgame).players[0] = Player1("Player 1 \0", player1_type, BLACK);
 
     //std::string nameinput = view->getName();
    // std::string name;//change?
@@ -115,7 +115,7 @@ ChessGame* chessgame1(viewType UIType,
     ChessPiece * piece;
     bool pieceNotMoved = true;
     if (getType(player) != BOT) {
-      std::string msg = "It's your turn. Please choose a chess piece.";
+      char* msg = "It's your turn. Please choose a chess piece.";
       while (pieceNotMoved) {
         while (true) {
           cellFrom = getCellFromPlayer(msg, false,view);//reconfigure this to the gameboard
