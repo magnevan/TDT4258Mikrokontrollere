@@ -6,7 +6,7 @@
 
 
 #include <iostream>
-
+using namespace std;
 
  ChessPiece* ChessPiece1() //: type(EMPTY), color(BLACK), points(0),
                             // position(0, 0), startPosition(0, 0), moved(false)
@@ -128,7 +128,7 @@
   //TODO trenger å vite lengden på arrayene. Å reallokere er ineffektivt
   Cell* getPossibleMoves(ChessBoard* board, ChessPiece* piece, int* counter)
   {
-
+      
     pieceType ptype=getType(piece);
       switch(ptype) {
     case PAWN:
@@ -142,6 +142,7 @@
     case QUEEN:
    return getPossibleMovesQueen( board,piece,counter);
     default:
+
    return getPossibleMovesKing( board,piece,counter);
     }
   

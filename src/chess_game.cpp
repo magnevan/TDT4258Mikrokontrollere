@@ -30,14 +30,10 @@ ChessGame* chessgame1(viewType UIType,
 
     (*chessgame). players[1] = Player1("Player 2", player2_type, WHITE);
 
+    (*chessgame).view=ChessViewTerm(chessgame);
     //view->printPlayers(players); dont needthis anyways yet
   }
 
- /* ~ChessGame()
-  {
-    free(players);//delete [] players;
-   // delete view; no view
-  }*/
 
   void startGame(ChessGame* chessgame)
   {
@@ -59,22 +55,60 @@ ChessGame* chessgame1(viewType UIType,
     int currentPlayer = 1;
 
     while (true) {
-      movePiece((*chessgame).players[currentPlayer], board);
+      movePiece((*chessgame).players[currentPlayer], board,(*chessgame).view);
 
       printBoard(board);
-      if (gameIsFinished((*chessgame).players[currentPlayer], board))
+      if (gameIsFinished((*chessgame).players[currentPlayer], board,(*chessgame).view))
         break;
       currentPlayer = 1 - currentPlayer;
+
       if (isCheck(getColor((*chessgame).players[currentPlayer]),board)) {
         //printMsg("*" + getName((*chessgame).players[currentPlayer]) +" is in check.*",view);
         printMsg(getName((*chessgame).players[currentPlayer]));
       }
+             
     }
-     //need to free the pieces inside the board before the board is freed
+     //rest of the method frees everything allocated in board
+     ChessPiece*** deleteboard= getallPieces();
+     int row=0;
+     int i=0;
+     int j=0;
+     while(j<2)
+     {
+     while(i<(*board).pieceslength[j])
+     {
+     free((*board).pieces[j][i]);
+     i++;
+     }
+     free((*board).pieces[j]);
+     j++;
+     }
+     
+     i=0;
+     j=0;
+        while(j<2)
+     {
+     while(i<(*board).piecescapturedlength[j])
+     {
+     free((*board).piecesCaptured[j][i]);
+     i++;
+     }
+     free((*board).piecesCaptured[j]);
+     j++;
+     }
+     while(row<8)
+     {
+ 
+     free(deleteboard[row]);
+
+     row++;
+
+     }
+     free(deleteboard);
     free(board);
   }
 
-  void movePiece(Player* player, ChessBoard* board, ChessView* view)
+  void movePiece(Player* player, ChessBoard* board, ChessView* view)//vi må fikse denne
   {
     Cell* cellFrom;
     Cell* cellTo;
@@ -84,7 +118,7 @@ ChessGame* chessgame1(viewType UIType,
       std::string msg = "It's your turn. Please choose a chess piece.";
       while (pieceNotMoved) {
         while (true) {
-          cellFrom = getCellFromPlayer(msg, false);//reconfigure this to the gameboard
+          cellFrom = getCellFromPlayer(msg, false,view);//reconfigure this to the gameboard
           piece = getPiece((*cellFrom).colum, (*cellFrom).rowum);//board
           if (piece == 0) {
             invalidCell("Not a chess piece!", cellFrom);
@@ -95,7 +129,7 @@ ChessGame* chessgame1(viewType UIType,
             msg = "Please choose one of you own chess pieces.";
           } else {
           int counter=0;
-            Cell* moves = getPossibleMoves(board,piece,&counter);
+            Cell* moves = getPossibleMoves(board,piece,&counter);//getpossiblemoves returnerer en vektor(array) med alle mulige moves. Gamepaden kan brukes til å velge move
             showValidMoves(moves,counter);
             //if (moves.size() > 0)
             if (counter> 0)
@@ -111,46 +145,37 @@ ChessGame* chessgame1(viewType UIType,
 
         msg = "Please choose a valid square to move the piece to.";
 
-        while (true) {
-          cellTo = getCellFromPlayer(msg, true);
+        while (true) {//will continue to prompt for moves unto a valid is selected
+          cellTo = getCellFromPlayer(msg, true,view);
           if ((*cellTo).colum < 0 || (*cellTo).rowum < 0) {
             msg = "Aborted. Please choose a chess piece.";
-                      free(cellFrom);
-          free(cellTo);
+
             break;
 
           }
-          // TODO: Sjekk brikken instedenfor
+          // checks if move is valid before moving
           if (validMove(board, (*cellTo),piece)) {
            movePlayerPieceTo((*cellFrom), (*cellTo), board);
-                     free(cellFrom);
-          free(cellTo);
+
             pieceNotMoved = false;
             break;
           }
           else
           {
             invalidCell("Invalid move.", cellTo);
-                      free(cellFrom);
-          free(cellTo);
+
             }
         }
 
       }
     }  else {
-    printf("nothing to show");
-      // AI-algoritmen starter her
-     /*node* noden= new node(Cell(),Cell(),false,0);
-      AI AI(board, noden, (bool)player.getColor());
-      AI.calculate();
-      cellFrom=(*noden).premoved;
-      cellTo=(*noden).moved;
-      delete(noden);
-
-      piece = board.getPiece(cellFrom.colum, cellFrom.rowum);*/
+      printf("there is currently only one type of player");
+      return;
     }
 
     pieceMoved(player, cellFrom, cellTo);
+          free(cellFrom);
+          free(cellTo);
   } // end of method movePiece(Player & player, ChessBoard * board)
 
   bool gameIsFinished(Player* lastPlayer, ChessBoard* board, ChessView* view)

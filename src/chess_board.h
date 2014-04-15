@@ -5,12 +5,12 @@
 
 #include <vector>
 
-#include "chess_cell.h"
+//#include "chess_cell.h"
 #include "chess_piece.h"
 
 
     // Brikkene på brettet.
-    ChessPiece *** board;
+    static ChessPiece *** board;//the name "board" need to be static since the name is reused as arguments
 //typedef enum { false, true } bool;
     /* 
      * En vector av brikkepekere til hver av spillerne. De er sortert etter
@@ -38,6 +38,7 @@
      */
        ChessBoard* Chessboard1();
     ChessPiece* getPiece(int col, int row);
+    ChessPiece*** getallPieces();//returnerer den statiske "boardpekeren" ovenfor. Brukes primært for free().
     //void redoPromotion(Cell position,colorType color,ChessPiece* lastPiece);
     /* 
      * Returnerer en vector av brikkepekere for en spiller som har den fargen på

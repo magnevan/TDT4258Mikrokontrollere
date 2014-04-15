@@ -30,7 +30,7 @@
     //virtual Cell getCellWithPieceFromPlayer(std::string msg);
 
     // Ber brukeren velge en celle som brikken skal flyttes til
-    Cell* getCellFromPlayer(std::string msg, bool pieceChosen);
+    Cell* getCellFromPlayer(std::string msg, bool pieceChosen, ChessView* view);
 
     // Gir beskjed at denne cellen ikke kan velges.
     void invalidCell(std::string msg, Cell* cell);

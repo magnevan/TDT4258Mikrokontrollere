@@ -5,7 +5,7 @@
 #include <sstream>
 #include <limits>
 
-#include "../chess_player.h"
+//#include "../chess_player.h"
 #include "chess_view_terminal.h"
 using namespace std;
 ChessView*  ChessViewTerm(ChessGame* gameref)
@@ -15,97 +15,14 @@ return chessview1(gameref);
 }
 
 
- /* void ChessViewTerm::printPlayers(Player * players)
-  {
-    for (int i = 0; i < 2; i++) {
-      std::cout << players[i].getName() << " is a "
-                << (players[i].getType() == BOT ? "bot" : "terminal player")
-                << " and has the color "
-                << (players[i].getColor() == BLACK ? "black" : "white") << "."
-                << std::endl;
-    }
-  }*/
-
-  /*std::string ChessViewTerm::getName()
-  {
-    std::cout << "Please enter the name of the second player. If you press "
-              << "ENTER it will be chosen for you (Player 2): ";
-    std::string input;
-    std::getline(std::cin, input);
-    return input;
-  }*/
-
-  /*bool ChessViewTerm::getNewRound()
-  {
-    std::cout << "Do you want to start a new round (yes or no)? ";
-    std::string input;
-    std::cin >> input;
-    while (input != std::string("yes")  && input != std::string("no")) {
-      std::cout << "Please enter yes or no: ";
-      std::cin >> input;
-    }
-
-    return input == std::string("yes");
-  }*/
 
   void initializeRound()
   {
     std::cout << "\033[1mStarting a new game of chess.\033[0m" << std::endl;
   }
-/*void ChessViewTerm::printBoard(ChessBoard & board)
+
+  void printBoard(ChessBoard* board)//this is the method used for displaying
   {
-    //using std::cout;
-    //using std::endl;
-
-    ChessPiece* piece;
-    pieceType type;
-    colorType color;
-    int lightBackground = 1;
-    std::string colorcode;
-    std::string b_colorcode;
-    int i, j, col, row;
-    int tableStart = 2; // Starten av brettet
-
-    
-    for (i = 0; i <= tableStart; i++)
-      cout << "-";
-    for (i = 0; i < 8; i++)
-      cout << "----";
-    cout << endl;
-
-    for (i = 1; i < tableStart; i++)
-      cout << " ";
-    char letter = 'a';
-    for (i = 0; i < 8; i++)
-      cout << "   " << letter++;
-    cout << endl;
-
-    for (i = 0; i < tableStart; i++)
-      cout << " ";
-    for (i = 0; i < 8; i++)
-      cout << " ---";
-    
-    // TODO: Øverste rad må begynne fra 8
-    for (row = 7; row >= 0; row--) {
-      lightBackground = (row % 2 != 0);
-      cout << "\n" << row + 1;
-      for (j = 1; j < tableStart; j++)
-        cout << " " ;
-      cout << '|';
-      for (col = 0; col < 8; col++) {
-        piece = board.getPiece(col, row);
-        type = piece != 0 ? piece->getType() : EMPTY;
-        color = (piece != 0 ? piece->getColor() : BLACK);
-        b_colorcode = (lightBackground ? "100" : "40");
-        cout << "\033[97;" << b_colorcode << "m " << pieceToString(type, color)
-             << " \033[0m|";
-        lightBackground = !lightBackground;
-      }
-    }*/
-  void printBoard(ChessBoard* board)
-  {
-    //using std::cout;
-    //using std::endl;
 
     ChessPiece* piece;
     pieceType type;
@@ -201,6 +118,7 @@ return chessview1(gameref);
      // printf(b_colorcode);
       printf("m ");
      // printf(pieceToString(type, color));//check this too
+     cout<<pieceToString(type, color);
       printf(" \033[0m|");
       if(lightBackground==1)
       lightBackground = 0;
@@ -334,7 +252,7 @@ return chessview1(gameref);
     std::cout << "\033[31m" << err << "\033[0m" << std::endl;
   }
 
-  Cell* askPlayerForACell(bool pieceChosen)//we have to change this
+  Cell* askPlayerForACell(bool pieceChosen)//Dette er metoden som 
   {
     using std::cout;
     using std::endl;

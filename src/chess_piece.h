@@ -6,10 +6,10 @@
 #include "types/piece_types.h"
 #include "types/color_types.h"
 #include "chess_cell.h"
+//#include "chess_board.h"
 
 
-  //class ChessBoard;//??why
-  struct ChessBoard;//remove this
+  struct ChessBoard;//forward declaration of chessboard
 
   enum piecePoint {KING_POINTS = 1000, QUEEN_POINTS = 517, ROOK_POINTS = 129,
 		   BISHOP_POINTS = 33, KNIGHT_POINTS = 16, PAWN_POINTS = 2};//may be removed

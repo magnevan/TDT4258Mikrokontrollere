@@ -26,10 +26,10 @@
 	      playerType player2_type);
     //~ChessGame();
 
-    void startGame();
+    void startGame(ChessGame* chessgame);
     void newRound(bool slowSpeed,ChessGame* chessgame);
-    void movePiece(Player* player, ChessBoard* board);
-    bool gameIsFinished(Player* lastPlayer, ChessBoard* board);
+    void movePiece(Player* player, ChessBoard* board, ChessView* view);
+    bool gameIsFinished(Player* lastPlayer, ChessBoard* board, ChessView* view);
   \
 
 

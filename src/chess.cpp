@@ -7,7 +7,7 @@
 
 int main(int argc, char* argv[])
 {
-  bool termPlayer1 = false;
+  bool termPlayer1 = true;
   bool termView = true;
 
   std::string arg;
@@ -18,14 +18,20 @@ int main(int argc, char* argv[])
       termPlayer1 = true;
   }
 
-  ChessGame* chessgame=chessgame1((termView ? chess::TERM : chess::GUI),
-                        (termPlayer1 ? chess::TERMINAL : chess::BOT),
-                        chess::BOT);
+  ChessGame* chessgame=chessgame1((termView ? TERM : GUI),
+                        (termPlayer1 ? TERMINAL : BOT),
+                        TERMINAL);
   try {
     startGame(chessgame);
+    free((*chessgame).players[0]);
+    free((*chessgame).players[1]);
+    free((*chessgame).view);
     free(chessgame);
   } catch (std::string err) {
     std::cout << err << std::endl;
+        free((*chessgame).players[0]);
+    free((*chessgame).players[1]);
+    free((*chessgame).view);
     free(chessgame);
     return 1;
   }

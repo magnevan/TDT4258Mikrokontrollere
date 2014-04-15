@@ -11,20 +11,20 @@
     (*chessboard).check[BLACK] = false;
     (*chessboard).check[WHITE] = false;
     //board = new ChessPiece ** [8];
-    board=(ChessPiece***) malloc(sizeof(ChessPiece**)*8);//donno if this works
+    board=(ChessPiece***) malloc(sizeof(ChessPiece**)*8);
     int row=0;
     
     //for (int row = 0; row < 8; row++)
     while(row<8){
       //board[row] = new ChessPiece * [8];
-      board[row]=(ChessPiece**) malloc(sizeof(ChessPiece*)*8);//donno if this works either
+      board[row]=(ChessPiece**) malloc(sizeof(ChessPiece*)*8);
       row++;
       }
 
-    (*chessboard).pieces[BLACK] = (ChessPiece**) malloc(sizeof(ChessPiece*)*30);//no realloc//std::vector<ChessPiece*>();
-    (*chessboard).pieces[WHITE] = (ChessPiece**) malloc(sizeof(ChessPiece*)*30);//pieces[WHITE] = std::vector<ChessPiece*>();
-    (*chessboard).piecesCaptured[BLACK] =(ChessPiece**) malloc(sizeof(ChessPiece*)*30);//std::vector<ChessPiece*>();
-    (*chessboard).piecesCaptured[WHITE] = (ChessPiece**) malloc(sizeof(ChessPiece*)*30);//std::vector<ChessPiece*>();
+    (*chessboard).pieces[BLACK] = (ChessPiece**) malloc(sizeof(ChessPiece*)*30);
+    (*chessboard).pieces[WHITE] = (ChessPiece**) malloc(sizeof(ChessPiece*)*30);
+    (*chessboard).piecesCaptured[BLACK] =(ChessPiece**) malloc(sizeof(ChessPiece*)*30);
+    (*chessboard).piecesCaptured[WHITE] = (ChessPiece**) malloc(sizeof(ChessPiece*)*30);
     (*chessboard).pieceslength[0]=0;
     (*chessboard).pieceslength[1]=0;
     (*chessboard).piecescapturedlength[0]=0;
@@ -200,6 +200,10 @@
     return board[row][col];//change board to array. MUST return a chesspiece piinter
   }
 
+  ChessPiece*** getallPieces()
+  {
+  return board;
+  }
   ChessPiece** getPieces(colorType color, ChessBoard* chessboard)//return all pieces belong to 1 player
   {
       return (*chessboard).pieces[color];

@@ -21,7 +21,7 @@
   Cell* getPossibleMovesDiagonal(ChessBoard* board, ChessPiece* pieces, int* counter)
   {
   
-    Cell* moves=malloc(sizeof(Cell)*16);
+    Cell* moves=(Cell*) malloc(sizeof(Cell)*16);
     getMovesDiagonal(board, pieces, moves, true, true, counter);   // Oppover til høyre
     getMovesDiagonal(board, pieces, moves, true, false, counter);  // Oppover til venstre
     getMovesDiagonal(board, pieces, moves, false, true, counter);  // Nedover til høyre
@@ -31,7 +31,7 @@
 
   bool validMoveDiagonal(ChessBoard* board, ChessPiece* pieces, Cell to)
   {
-    Cell ownPos = (*pieces).getPosition();
+    Cell ownPos = getPosition(pieces);
     if (cellequals(ownPos, to) || ownPos.colum == to.colum || ownPos.rowum == to.rowum ||
         to.colum > 7 || to.colum < 0 || to.rowum > 7 || to.rowum < 0)
       return false;
@@ -59,7 +59,7 @@
       //cell = Cell(col, row);
       cell.rowum=row;
       cell.colum=col;
-      piece = (*board).getPiece(col, row);
+      piece = getPiece(col, row);
       if (piece != 0) {
         if(col != to.colum || row != to.rowum)
           return false;
@@ -70,21 +70,21 @@
       row += rowInc;
     }
     //sanity check
-    if (cell.col != to.col || cell.row != to.row) {
+    if (cell.colum != to.colum || cell.rowum != to.rowum) {
       return false;
     }
 
-    if (piece == 0 && isCheckOnMove((*board), pieces, ownPos, cell)) {
+    if (piece == 0 && isCheckOnMove(board, pieces, ownPos, cell)) {
       return false;
-    } else if (piece != 0 && (piece->getColor() == (*pieces).getColor() ||
-               isCheckOnMove((*board), pieces, ownPos,
-                                         piece->getPosition()))) {
+    } else if (piece != 0 && (getColor(piece) == getColor(pieces) ||
+               isCheckOnMove(board, pieces, ownPos,
+                                         getPosition(piece)))) {
       return false;
     } else   
       return true;
   } // end of method validMove
 
-  void getMovesDiagonal(ChessBoard* board, ChessPiece* pieces
+  void getMovesDiagonal(ChessBoard* board, ChessPiece* pieces,
     Cell* moves, bool upwards, bool right, int* counter)
   {
     Cell ownPos = getPosition(pieces);
@@ -100,15 +100,15 @@
 
     while ((right ? (col < 8) : (col > -1)) &&
            (upwards ? (row < 8) : (row > -1))) {
-      piece = (*board).getPiece(col, row);
+      piece = getPiece(col, row);
       cell.rowum=row;
       cell.colum=col;
-      if (piece == 0 && !isCheckOnMove((*board), pieces, ownPos,
+      if (piece == 0 && !isCheckOnMove(board, pieces, ownPos,
                                                    cell)) {
         moves[(*counter)++]=cell;//moves.push_back(Cell(col, row));
       } else if (piece !=0) {
         if (getColor(piece) != getColor(pieces) &&
-            !isCheckOnMove((*board), pieces, ownPos,
+            !isCheckOnMove(board, pieces, ownPos,
                                        getPosition(piece))) {
          moves[(*counter)++]=cell; //moves.push_back(Cell(col, row));
         }

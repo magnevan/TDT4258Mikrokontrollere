@@ -23,7 +23,7 @@
     (*counter)=0;
     //std::vector<Cell> moves2 = ChessPieceDiagonal::getPossibleMoves(board);
   Cell* moves2 = getPossibleMovesDiagonal(board,pieces,counter);
-  Cell* finalmoves=malloc(sizeof(Cell)*temp+sizeof(Cell)*(*counter));//[temp+(*counter)];
+  Cell* finalmoves=(Cell*) malloc(sizeof(Cell)*temp+sizeof(Cell)*(*counter));//[temp+(*counter)];
   int i=0;
   while(i<temp)
   {

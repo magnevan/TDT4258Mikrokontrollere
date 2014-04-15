@@ -5,12 +5,21 @@
 #include "chess_board.h"
 #include "chess_rules.h"
 
-#include <iostream>
+//#include <iostream>
 
   bool win(ChessBoard* board, colorType lastColorMove)
   {
     colorType nextColorMove = colorType(1 - lastColorMove);
-    return isCheck(nextColorMove, board) && !hasMoves(board, nextColorMove);
+     if(isCheck(nextColorMove, board) && !hasMoves(board, nextColorMove))
+     {
+ 
+     return true;
+     }
+     else
+     {
+
+     return false;
+     }
   }
 
   bool stalemate(ChessBoard* board, colorType lastColorMove)//check for remis
@@ -20,8 +29,20 @@
   nextColorMove=WHITE;
   else
   nextColorMove=BLACK;
+
     //colorType nextColorMove = colorType(1 - lastColorMove);
-    return !isCheck(nextColorMove,board) && !hasMoves(board, nextColorMove);
+    //return !isCheck(nextColorMove,board) && !hasMoves(board, nextColorMove);
+    
+         if(!isCheck(nextColorMove, board) && !hasMoves(board, nextColorMove))
+     {
+
+     return true;
+     }
+     else
+     {
+
+     return false;
+     }
   }
 
   
@@ -30,7 +51,7 @@
     ChessPiece** piecesBlack = getPieces(BLACK, board);
      ChessPiece** piecesWhite = getPieces(WHITE, board);//board file
     pieceType pType;
-
+    
     //if (piecesBlack.size() == 1 && piecesWhite.size() == 1)
     if((*board).pieceslength[BLACK]==1&&(*board).pieceslength[WHITE]==1)
       return true; // Konge mot konge
@@ -76,8 +97,10 @@ int i=0;
     //for (it = pieces.begin(); it != pieces.end(); it++) {
     while(i<piecelength){
     int counter=0;
+
     getPossibleMoves( board, pieces[i], &counter);
      // if (getPossibleMoves(board).size() > 0) {
+
      if(counter>0){
         moves = true;
         break;
@@ -154,7 +177,7 @@ int i=0;
   } // end of method :isCheckOnNextMove(...)
 
   bool isCheck(ChessBoard* board, colorType kingColor)
-  {
+  { 
     // TODO: Bør bruke brikkenes validMove-metode istedenfor?
     return (
       // Sjekker vertikalt for motstanders konge, dronning eller tårn
@@ -214,6 +237,7 @@ int i=0;
 
     //for (; (rightOrUp ? (colOrRow < 8) : (colOrRow >= 0)); colOrRow += inc) {
     while(rightOrUp ? (colOrRow < 8) : (colOrRow >= 0)){
+
       if (vertical) {
         piece = getPiece(col, colOrRow);
         //std::cout << "col/row: " << char(65 + col) << colOrRow + 1
@@ -272,6 +296,7 @@ int i=0;
 
     while ((right ? (col < 8) : (col > -1)) &&
            (upwards ? (row < 8) : (row > -1))) {
+           
       piece = getPiece(col, row);
       if (piece != 0 ) {
         if(getColor(piece) == kingColor)

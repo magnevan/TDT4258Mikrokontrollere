@@ -13,7 +13,7 @@
     Player* player=(Player *) malloc(sizeof(Player));
     //(*player).name=pname;
     //(*player).name="OMG";
-   (*player). type=ptype;
+   (*player).type=ptype;
     (*player).color=pcolor;
     return player;
     
