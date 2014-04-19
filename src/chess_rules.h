@@ -68,7 +68,7 @@
      * sjekkes. Bruk da heller metodene isCheckStraight, isCheckDiagonal eller
      * isCheckKnight.
      */
-   bool isCheck(ChessBoard* board, colorType kingColor);
+  bool isCheck(ChessBoard* board, colorType kingColor);
 
     
     void promotion(ChessBoard* board,colorType color, ChessPiece* piece);

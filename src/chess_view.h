@@ -3,8 +3,8 @@
 #ifndef CHESS_VIEW_H_
 #define CHESS_VIEW_H_
 
-#include "../chess_game.h"
-#include <string>
+#include "chess_game.h"
+#include <string.h>
 
 
   struct ChessView//struct designed for containing information about display. I currently not used for anything

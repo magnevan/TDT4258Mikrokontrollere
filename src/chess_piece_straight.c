@@ -2,10 +2,10 @@
 
 
 
-#include "../chess_board.h"
-#include "../chess_piece.h"
+#include "chess_board.h"
+#include "chess_piece.h"
 //#include "chess_piece_straight.h"
-#include "../chess_rules.h"
+#include "chess_rules.h"
 
 //#include <iostream>
 

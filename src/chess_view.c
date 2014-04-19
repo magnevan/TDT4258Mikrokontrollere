@@ -1,6 +1,6 @@
 // Kontrollert av eirik Flogard
 
-#include <string>
+#include <string.h>
 
 #include "chess_view.h"
 

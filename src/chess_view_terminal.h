@@ -4,30 +4,20 @@
 #define CHESS_VIEW_TERMINAL_H_
 
 #include "chess_view.h"
+#include "screen.h"
 
 
 
-
-  ChessView*  ChessViewTerm(ChessGame* gameref);
+  ChessView* ChessViewTerm(ChessGame* gameref);
     
-    // Ber spilleren om å oppgi et navn.
 
-
-    // Skriver ut listen over alle spillere
-   
-
-    // Spør om spilleren vil spille mer.
-
-   void initializeRound(); // Gjør vinduet klar for ny runde.
+   void initializeRound(); // initalize windows for new rounds
 
     // Viser brettets tilstand på skjermen.
   void printBoard(ChessBoard* board); //remove&change
 
     // Viser mulige trekk.
    void showValidMoves(Cell* moves, int size); //needed, change
-
-    // Ber brukeren velge en celle med en brikke i.    
-    //virtual Cell getCellWithPieceFromPlayer(std::string msg);
 
     // Ber brukeren velge en celle som brikken skal flyttes til
     Cell* getCellFromPlayer(char* msg, bool pieceChosen, ChessView* view);
@@ -43,7 +33,8 @@
 
     Cell* askPlayerForACell(bool pieceChosen);
 
-   const char* pieceToString(pieceType type, colorType color);
+char* pieceToString(pieceType type, colorType color, short* map, int fd,int col, int row);
+void drawpieces(pieceType type, colorType color, short* map, int fd,int col, int row);
 
 
 

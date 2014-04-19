@@ -1,9 +1,9 @@
 //kontrollert av eirik flgoard
 
 
-#include "../chess_board.h"
-#include "../chess_piece.h"
-#include "../chess_rules.h"
+#include "chess_board.h"
+#include "chess_piece.h"
+#include "chess_rules.h"
 
 
 

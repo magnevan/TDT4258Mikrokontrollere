@@ -1,11 +1,11 @@
 // Kontrollert av eirik flogard
 
-#include <vector>
+//#include <vector>
 #include <stdlib.h> 
 
-#include "../chess_board.h"
-#include "../chess_piece.h"
-#include "../chess_rules.h"
+#include "chess_board.h"
+#include "chess_piece.h"
+#include "chess_rules.h"
 
 //#include <iostream>
 

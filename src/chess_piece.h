@@ -3,17 +3,19 @@
 #ifndef CHESS_PIECE_H_
 #define CHESS_PIECE_H_
 
-#include "types/piece_types.h"
-#include "types/color_types.h"
 #include "chess_cell.h"
+#include "piece_types.h"
+#include "color_types.h"
+
 //#include "chess_board.h"
 
-
+typedef struct ChessBoard ChessBoard;
   struct ChessBoard;//forward declaration of chessboard
 
-  enum piecePoint {KING_POINTS = 1000, QUEEN_POINTS = 517, ROOK_POINTS = 129,
-		   BISHOP_POINTS = 33, KNIGHT_POINTS = 16, PAWN_POINTS = 2};//may be removed
-
+ /* enum piecePoint {KING_POINTS = 1000, QUEEN_POINTS = 517, ROOK_POINTS = 129,
+		   BISHOP_POINTS = 33, KNIGHT_POINTS = 16, PAWN_POINTS = 2};//may be removed*/
+static int piece_points[] = {1000, 197, 127, 77, 67, 6};
+typedef struct ChessPiece ChessPiece;
   struct ChessPiece
   {
     pieceType type;
@@ -118,7 +120,7 @@
  // class ChessPieceKnight : public ChessPiece
   //{
    //const int movePatterns[4][2];
-     const int knightmovePatterns[4][2] =
+    static const int knightmovePatterns[4][2] =
     {{-2, -1}, {-1, -2}, {1, -2}, {2,-1}};
   //public:
     //ChessPieceKnight();

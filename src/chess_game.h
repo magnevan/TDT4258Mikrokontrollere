@@ -8,11 +8,10 @@
 
 
   typedef enum{TERM, GUI} viewType;
-  //typedef enum { false, true } bool;
-  class ChessViewTerm;
-  class ChessView;
-  //class Player;
 
+typedef struct ChessView ChessView;
+  struct ChessView;
+typedef struct ChessGame ChessGame;
   struct ChessGame
   {
     // Model

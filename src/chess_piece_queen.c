@@ -2,8 +2,8 @@
 
 
 
-#include "../chess_board.h"
-#include "../chess_piece.h"
+#include "chess_board.h"
+#include "chess_piece.h"
 
 
 

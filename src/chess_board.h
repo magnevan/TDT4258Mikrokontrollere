@@ -3,7 +3,7 @@
 #ifndef CHESS_BOARD_H_
 #define CHESS_BOARD_H_
 
-#include <vector>
+
 
 //#include "chess_cell.h"
 #include "chess_piece.h"
@@ -16,7 +16,8 @@
      * En vector av brikkepekere til hver av spillerne. De er sortert etter
      * poengsum i synkende rekkefølge.
      */
-   struct ChessBoard{
+typedef struct ChessBoard ChessBoard;
+   struct ChessBoard {
     ChessPiece** pieces[2];
     ChessPiece** piecesCaptured[2];
     int piecescapturedlength[2];//må ha farge også
@@ -57,44 +58,12 @@
      * Returnerer sannhetsverdien på om den spilleren som har sin tur å spille
      * er i sjakk.
      */
-    bool isCheck(colorType color,ChessBoard* chessboard);
+    bool isCheck2(colorType color,ChessBoard* chessboard);
 
     bool setCheck(colorType color, bool checkValue,ChessBoard* chessboard);
 
-    // Sjekker brettet om motspillerern er i sjakk
-    //bool isCheckOnNextMove(Cell from, Cell to); 
-
-    /* 
-     * Flytter brikken som ligger på posisjon "from" til den ruten som ligger på
-     * posisjon "to". Det antas at trekket er lovlig. Denne metoden flytter ikke
-     * brikken hvis spillet er i sjakk. Ingenting skjer hvis det ikke finnes en
-     * brikke på rute "from".
-     */
-    //void movePieceTo(Cell from, Cell to);
-    //void moveBackPieceTo(Cell from, Cell to);
     void movePlayerPieceTo(Cell from, Cell to, ChessBoard* board);
     void setPiece(pieceType ptype, colorType pcolor, Cell startpos, ChessBoard* chessboard);
-   // void placeBackLastCapturedPiece(colorType color);
-    /*
-     * Fungerer på samme måte som movePieceTo()-metoden, men den sjekker ikke om
-     * motstanderen er i sjakk etter trekket.  Den er ment for å brukes til å
-     * flytte brikken etter et forsøk på å se om brikken kan fjerne sjakk
-     * for sin egen konge. Hvis brikkens posisjon ikke stemmer med det som sendes
-     * som argumentetvariablen "from", skjer det ingenting.
-     */
-    //void movePiece(ChessPiece * piece, Cell from, Cell to);
-
-    /*
-     * Lager en ny brikke og plaserer den i den posisjonen som sendes som
-     * argument. Hvis det eksisterer en brikke der fra før av, slettes den.
-     */
-    //void placePiece(pieceType type, colorType color, Cell to);
-
-    /* 
-     * Sletter brikken fra brettet. Den vil også bli slettet fra minnet. Hvis
-     * brikken må huskes, må du ta en kopi av den.
-     */
-  //  void deletePiece(ChessPiece * piece);
 
 
 #endif

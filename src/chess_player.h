@@ -5,22 +5,22 @@
 
 //#include <string>
 
-#include "types/player_types.h"
-#include "types/color_types.h"
+#include "player_types.h"
+#include "color_types.h"
 
 
-  struct Player
+ typedef struct Player
   {
     playerType type;
-    char name[5];
+    char* name;
     colorType color;
-      };
+      } Player;
  // public:
     Player* Player0();
     Player* Player1(char* name, playerType type, colorType color);
-    playerType getType(Player* player);
+    playerType getPlayerType(Player* player);
     char* getName(Player* player);
-    colorType getColor(Player* player);
+    colorType getPlayerColor(Player* player);
 
 
 

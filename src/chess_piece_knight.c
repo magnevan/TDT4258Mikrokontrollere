@@ -2,9 +2,9 @@
 
 
 
-#include "../chess_board.h"
-#include "../chess_piece.h"
-#include "../chess_rules.h"
+#include "chess_board.h"
+#include "chess_piece.h"
+#include "chess_rules.h"
 
 
   /*const int knightmovePatterns[4][2] =
@@ -18,8 +18,8 @@
       return false;
 
     Cell ownPos = getPosition(piecen);
-
-    for (int i = 0; i < 4; i++) {
+int i;
+    for (i = 0; i < 4; i++) {
       if (knightmovePatterns[i][0] + ownPos.colum == to.colum &&
           (knightmovePatterns[i][1] + ownPos.rowum == to.rowum ||
            knightmovePatterns[i][1]*-1 + ownPos.rowum == to.rowum)) {
@@ -93,7 +93,8 @@
     cell.rowum=from.rowum;
     (*counter)=0;
     int col, row;
-    for (int i = 0; i < 4; i++) {
+int i;
+    for (i = 0; i < 4; i++) {
       col = knightmovePatterns[i][0] + from.colum;
       if (col < 8 && col > -1) {
         row = knightmovePatterns[i][1] + from.rowum;
