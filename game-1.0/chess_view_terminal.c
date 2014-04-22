@@ -2,17 +2,7 @@
 
 
 #include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <linux/fb.h>
-#include <fcntl.h>
 #include "chess_view_terminal.h"
-#define FILEPATH "/dev/fb0"
-#define FILESIZE (320*240)
-
 ChessView* ChessViewTerm(ChessGame* gameref)
 {
 return chessview1(gameref);
@@ -20,13 +10,12 @@ return chessview1(gameref);
 }
 
 
-  void initializeRound()
+  void initializeRound(short* map, int fd)
   {
     ChessPiece* piece;
     pieceType type;
     colorType color;
-    int fd = open(FILEPATH, O_RDWR);
-    short* map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
+
     printf("Starting a new game of chess \n");
 
     screenclear( map, fd);
@@ -53,12 +42,7 @@ munmap(map,FILESIZE);
 
   void printBoard(ChessBoard* board)//this is the method used for displaying
   {   
-	 int fd = open(FILEPATH, O_RDWR);
-  short* map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);   
-    if (fd == -1) {
-    perror("Error opening file for reading");
-    exit(EXIT_FAILURE);
-    }
+
 //put this map somewhere else. inefficient
 
     ChessPiece* piece;
@@ -143,7 +127,7 @@ munmap(map,FILESIZE);
       printf("\033[97;");
      printf("%s", b_colorcode);
       printf("m ");
-     printf("%s",pieceToString(type, color,map,fd,col,row));
+     printf("%s",pieceToString(type, color,NULL,0,col,row));
       printf(" \033[0m|");
       if(lightBackground==1)
       lightBackground = 0;
@@ -183,8 +167,7 @@ munmap(map,FILESIZE);
      }
 
       printf("\n");
-munmap(map,FILESIZE);
-close(fd);
+
   }
 
   void showValidMoves(Cell* moves, int size)
@@ -208,11 +191,11 @@ close(fd);
   }
 
 
-  Cell* getCellFromPlayer(char* msg, bool pieceChosen, ChessView* view)
+  Cell* getCellFromPlayer(char* msg, bool pieceChosen, ChessView* view, Player* player, ChessBoard* board,Cell* cellFrom)
   {
     printMsg(msg);
     
-    return askPlayerForACell(pieceChosen);
+    return askPlayerForACell(pieceChosen, player, board,cellFrom);
   }
 
   void invalidCell(char* msg, Cell* cell)
@@ -227,8 +210,13 @@ close(fd);
 
   void pieceMoved(Player* player, Cell* from, Cell* to)
   {
-	 int fd = open(FILEPATH, O_RDWR);
-  short* map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
+	     int fd = open(FILEPATH, O_RDWR);
+    if (fd == -1) {
+    perror("Error opening file for reading");
+    exit(EXIT_FAILURE);
+    }
+	short* map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
+
    ChessPiece* piece = getPiece((*to).colum, (*to).rowum);
      pieceType type = piece != 0 ? getType(piece) : EMPTY;
      colorType color = (piece != 0 ? getColor(piece) : BLACK);
@@ -241,9 +229,10 @@ squareclear(map,fd,(*from).colum, (*from).rowum);
     printf("%c", ((*to).colum + 65));
     printf("%d", ((*to).rowum + 1));
     printf("\n");
+
     switch(type) {
     case EMPTY:
-      return;
+      break;
     case PAWN:
       printpiecePawn(map,fd,color,(*to).colum,(*to).rowum);
       break;
@@ -264,7 +253,7 @@ squareclear(map,fd,(*from).colum, (*from).rowum);
       break ;
     }
 munmap(map,FILESIZE);
-close(fd);
+	close(fd);
   }
 
   void printMsg(char* msg)
@@ -278,58 +267,98 @@ close(fd);
   printf("%s", err);
   }
 
-  Cell* askPlayerForACell(bool pieceChosen)//Dette er metoden som må endres
+  Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell* cellFrom)//Dette er metoden som må endres
   {
 
         char *s=(char*) malloc(sizeof(char)*100);
-
-
+    ChessPiece** pieces;
+    ChessPiece* piece;
+    char counter=0;
     int col, row;
     while (true) {
 
-      printf("Enter square number (e.g. A7, G4 etc.");
-      if(pieceChosen)
-      printf(" Leave prompt empty to abort.");
-      printf("): \0");
 
-      bool correct = false;
-      while (true) {
-      
-          scanf("%s",s);
-        if (strlen(s) == 2) {
-          char colInput = s[0];
-          char rowInput = s[1];
-          if (colInput < 'A' || colInput > 'h' ||
-              (colInput > 'H' && colInput < 'a')) {
-            printf("Invalid column. Should be a character between a and h.\n");
-          } else if (rowInput < 49 || rowInput > 56) {
-            printf("Invalid row. Should be an integer between 1 and 8.\n");
-          } else {
-            col = colInput - (colInput <= 'H' ? 65 : 97);
-            row = rowInput - 49;
-            break;
-          }
-        } 
-        else if (pieceChosen && strlen(s) ==0)
-        {
-        Cell* cell=(Cell*) malloc(sizeof(Cell));
-        (*cell).rowum=-1;
-        (*cell).colum=-1;
-        free(s);
-          return cell; // Ugyldig celle, avslutter valget.
-        }
-        printf("Please choose a valid square\n");
-        if(pieceChosen)
-         printf(" (Leave prompt empty to abort.): \n");   
-         else
-         printf(": \n");
-      }
-              Cell* cell2=(Cell*) malloc(sizeof(Cell));
-                      (*cell2).rowum=row;
+	if(!pieceChosen)
+	{      printf("Scroll through pieces by writing 1 and -1. Your king is the currently selected piece. Write 8 to confirm a selection. ");//change to suitable buttons
+	pieces=getPieces(getPlayerColor(player),board);
+		while(true)
+		{
+			  scanf("%s",s);
+			if (strlen(s) <= 10) {
+			 	 char Input1 = s[0];
+			 	 char Input2 = s[1];
+				if((Input1=='-'&&Input2=='1')&&counter>0)//replace this with buttoncheck
+					counter--;
+				else if(Input1=='1'&&counter<((*board).pieceslength[getPlayerColor(player)]-1))
+					counter++;
+				else
+					printf("Invalid input. Write 1 or -1 to choose a piece\n");
+				pieceType type = pieces[counter] != 0 ? getType(pieces[counter]) : EMPTY;
+
+			    	col = getPosition(pieces[counter]).colum;
+			    	row = getPosition(pieces[counter]).rowum;
+				printf("%s" ,pieceToString(type, getPlayerColor(player), NULL,0,col, row));
+				printf(" currently at");
+		      		printf(" %c",(col + 65) );
+		      		printf("%d", (row + 1));
+				printf(" is selected\n");
+				if( Input1=='8')
+			    		break;
+
+			  }
+
+		}
+
+	}
+	else
+	{
+		printf("Scroll through all possile moves of your selected piece by writing 1 and -1. Write 8 to confirm a selection. Write 9 to abort selection\n ");//change to suitable buttons
+		piece = getPiece((*cellFrom).colum, (*cellFrom).rowum);
+		int length=0;
+		Cell* moves = getPossibleMoves(board,piece,&length);
+		while(true)
+		{
+			  scanf("%s",s);
+			if (strlen(s) <= 10) {
+			  	char Input1 = s[0];
+			  	char Input2 = s[1];
+				if((Input1=='-'&&Input2=='1')&&counter>0)//replace this with buttoncheck
+					counter--;
+				else if(Input1=='1'&&counter<(length-1))//replace input1 check with buttoncheck
+					counter++;
+				else
+					printf("Invalid selection. Write 1 or -1 to choose a where to move\n");
+				printf("write 9 to abort to chose new piece. Write 8 to confirm selection\n");
+
+				pieceType type = piece != 0 ? getType(piece) : EMPTY;
+				col = moves[counter].colum;
+				row = moves[counter].rowum;
+				printf("%s" ,pieceToString(type, getPlayerColor(player), NULL,0,col, row));
+				printf("s possible move to ");
+			      	printf(" %c",(moves[counter].colum + 65) );
+			      	printf("%d", (moves[counter].rowum + 1));
+			      	printf(" is selected\n");
+				if(Input1=='8')//9 is abort and 8 is ok, change this to test the button vector
+				    break;
+				else if(Input1=='9'){
+				row=-1;
+				col=-1;
+				break;
+				}	
+			}
+
+
+
+		}
+
+	}
+        Cell* cell2=(Cell*) malloc(sizeof(Cell));
+        (*cell2).rowum=row;
         (*cell2).colum=col;
         free(s);
       return cell2;
     }
+return NULL;
   }
 
 char* pieceToString(pieceType type, colorType color, short* map, int fd,int col, int row)

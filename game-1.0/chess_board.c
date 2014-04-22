@@ -2,7 +2,7 @@
 
 #include "chess_board.h"
 #include "chess_rules.h"
-#include <iostream>
+//#include <iostream>
 
   //ChessBoard::ChessBoard() : turns()
   ChessBoard* Chessboard1()
@@ -48,13 +48,14 @@
     void expand(ChessBoard* chessboard, int insertspot,ChessPiece** ownPieces,colorType pcolor)//lets you insert a new piece in the middle of an array(i hope)
     {
     int i=((*chessboard).pieceslength[pcolor]-1);
-    while(i>=0)
+    while(i>=insertspot)
     {
     ownPieces[i+1]=ownPieces[i];
     i--;
     }
     
     (*chessboard).pieceslength[pcolor]++;
+	(*chessboard).pieces[pcolor]=ownPieces;
     }
   void setPiece(pieceType ptype, colorType pcolor, Cell startpos, ChessBoard* chessboard)
   {
@@ -75,7 +76,8 @@
        if(getPoints(ownPieces[i])+getStartPosition(ownPieces[i]).colum< getPoints(newPiece)+getStartPosition(newPiece).colum){//find the place in the piecearray where piece belongs
         //ownPieces.insert(it, newPiece);//we need to make room in the vector for the new piece to be put in. I would consider not doing this as bad programming practice. Bugs will occur.
         expand(chessboard,i,ownPieces,pcolor);
-        ownPieces[i]=newPiece;
+        //ownPieces[i]=newPiece;
+	(*chessboard).pieces[pcolor][i]=newPiece;
         return;
       }
       i++;
@@ -84,7 +86,7 @@
 
 
     //ownPieces.push_back(newPiece);
-    ownPieces[(*chessboard).pieceslength[pcolor]++]=newPiece;
+(*chessboard).pieces[pcolor][(*chessboard).pieceslength[pcolor]++]=newPiece;
   }
 
   void initializeBoard(ChessBoard* chessboard)
@@ -219,7 +221,7 @@
     return (*chessboard).turns;
   }
 
-  bool isCheck(colorType color,ChessBoard* chessboard)
+  bool isCheck2(colorType color,ChessBoard* chessboard)
   {
     return (*chessboard).check[color];
   }
@@ -228,6 +230,7 @@
   {
     (*chessboard).check[color] = checkValue;//change to void?
    // return true;
+return checkValue;
   }
   void placeBackLastCapturedPiece(colorType color, ChessBoard* chessboard)
   {
@@ -255,14 +258,16 @@
    getPoints(lastPiece)+getStartPosition(lastPiece).colum){//place in vector sorted by columns and points
         //ownPieces.insert(it, lastPiece);
         expand(chessboard, i,ownPieces,color);
-        ownPieces[i]=lastPiece;
+        //ownPieces[i]=lastPiece;
+	(*chessboard).pieces[color][i]=lastPiece;
         return;
       }
       i++;
     }
 
     //ownPieces.push_back(lastPiece);    
-    ownPieces[(*chessboard).pieceslength[color]]=lastPiece;
+    //ownPieces[(*chessboard).pieceslength[color]]=lastPiece;
+   (*chessboard).pieces[color][(*chessboard).pieceslength[color]++]=lastPiece;
   }
   
    void movePlayerPieceTo(Cell from, Cell to, ChessBoard* board)
@@ -318,7 +323,10 @@ Cell cell;
     movePieceWithoutCheck(pieceToMove, to,board);//TODO check konsistens
     setCheck(getColor(pieceToMove), false, board);
     bool checkOpp = isCheckOnMove(board, pieceToMove, from, to);
-    setCheck(colorType(1 - getColor(pieceToMove)), checkOpp, board);
+if(getColor(pieceToMove)==BLACK)
+    setCheck(WHITE, checkOpp, board);
+else
+setCheck(BLACK, checkOpp, board);
     promotion(board,getColor(pieceToMove), pieceToMove);
   }
   
@@ -344,6 +352,7 @@ Cell cell;
   i++;
   }
   ((*chessboard).pieceslength[color])--;//decrement length of number of pieces
+  (*chessboard).pieces[color]=ownPieces;
   }
   void removePiece(Cell pos, ChessBoard* chessboard)
   {

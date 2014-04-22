@@ -11,8 +11,8 @@
 
   bool smallCastling(ChessBoard* board, ChessPiece* pieces, Cell ownPos)
   {
-
-    if (cellequals(ownPos,getStartPosition((pieces)))) {
+	//this if-test is for better performance
+    if (cellequals(ownPos,getStartPosition((pieces)))&&(*pieces).moved==0) {
       ChessPiece** piecevector = getPieces(getColor((pieces)),board);//found in board
       int piecevectorlength=(*board).pieceslength[getColor((pieces))];
       int i=0;
@@ -21,7 +21,7 @@
       {
         if(cellequals(getPosition(piecevector[i]),
            getStartPosition(piecevector[i])) &&
-           getType(piecevector[i])==ROOK) {
+           getType(piecevector[i])==ROOK&&(*piecevector[i]).moved==0) {
           int rad=ownPos.rowum;
           Cell rookpos=getPosition(piecevector[i]);
           if(rookpos.colum==0)
@@ -50,7 +50,7 @@
   bool bigCastling(ChessBoard* board, ChessPiece* pieces, Cell ownPos)
   {
   //upper if check is a redundant check for better performance. There will be no check for castling if the piece already has moved.
-    if(cellequals(ownPos, getStartPosition(pieces))) {
+    if(cellequals(ownPos, getStartPosition(pieces))&&(*pieces).moved==0) {
       ChessPiece** piecevector = getPieces(getColor((pieces)),board);//must fix this later
       int piecevectorlength=(*board).pieceslength[getColor((pieces))];
       int i=0;
@@ -61,7 +61,7 @@
 
           if(cellequals(getPosition(piecevector[i]),
            getStartPosition(piecevector[i])) &&
-           getType(piecevector[i])==ROOK)
+           getType(piecevector[i])==ROOK&&(*piecevector[i]).moved==0)
           {
             int rad=ownPos.rowum;
             Cell rookpos=getPosition(piecevector[i]);
@@ -172,7 +172,7 @@
     cell.colum=ownPos.colum+2;
       if(!isCheckOnMove(board, pieces, ownPos,
                                     cell))
-        moves[(*counter)++]=cell;//moves.push_back(Cell(col+2,row));
+        moves[(*counter)++]=cell;
     }
     
     if(bigCastling(board,pieces,ownPos)) {
@@ -181,7 +181,7 @@
 
       if(!isCheckOnMove(board, pieces, ownPos,
                                     cell))
-        moves[(*counter)++]=cell;//moves.push_back(Cell(col+2,row));
+        moves[(*counter)++]=cell;
     }
 
     int maxCol = (col == 7 ? col : col + 1);
@@ -192,10 +192,10 @@
 
     ChessPiece * piece;
 
-   // for (row = minRow; row <= maxRow; row++) {
+ 
    row=minRow;
    while(row<=maxRow){
-      //for (col = minCol; col <= maxCol; col++) {
+
 
       col=minCol;
       while(col<=maxCol){
@@ -211,11 +211,11 @@
 
         if (piece == 0 && !isCheckOnMove(board, pieces, ownPos,
                                                      cell)) {
-        moves[(*counter)++]=cell; //moves.push_back(Cell(col, row));
+        moves[(*counter)++]=cell; 
         } else if (piece != 0 && getColor(piece) != getColor(pieces) &&
                  !isCheckOnMove(board, pieces, ownPos,
                                             cell)) {
-        moves[(*counter)++]=cell; //moves.push_back(Cell(col, row));
+        moves[(*counter)++]=cell; 
         }
         col++;
       }

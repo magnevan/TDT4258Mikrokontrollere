@@ -8,8 +8,7 @@
 //#include <iostream>
 
 
- ChessPiece* ChessPiece1() //: type(EMPTY), color(BLACK), points(0),
-                            // position(0, 0), startPosition(0, 0), moved(false)
+ ChessPiece* ChessPiece1() 
   {
   
   ChessPiece* ChessPiece1=(ChessPiece *) malloc(sizeof(ChessPiece));
@@ -25,9 +24,7 @@
   
   }
 
- ChessPiece* ChessPiece2(pieceType ptype, colorType pcolor, Cell startpos) //:
-   // type(ptype), color(pcolor), position(startpos), points(piece_points[ptype]),
-   // startPosition(startpos), moved()
+ ChessPiece* ChessPiece2(pieceType ptype, colorType pcolor, Cell startpos) 
   {
     ChessPiece* ChessPiece1=(ChessPiece*) malloc(sizeof(ChessPiece));
   (*ChessPiece1).type=ptype;
@@ -37,12 +34,11 @@
   (*ChessPiece1).position.rowum=startpos.rowum;
   (*ChessPiece1).startPosition.colum=startpos.colum;
   (*ChessPiece1).startPosition.rowum=startpos.rowum;
-  (*ChessPiece1).moved=0;//maybe not ok
+  (*ChessPiece1).moved=0;//moved is set when a piece moves to use for castlings
   return ChessPiece1;
   
   }
 
- // ChessPiece::~ChessPiece() we need to free those stupid chesspieces
 
 
   ChessPiece* createPiece(pieceType ptype, colorType pcolor,
@@ -51,21 +47,21 @@
     switch(ptype) {
     case PAWN:
     return ChessPiece2(ptype,pcolor,startpos);
-      //return new ChessPiecePawn(pcolor, startpos);
+
     case KNIGHT:
-      //return new ChessPieceKnight(pcolor, startpos);
+
       return ChessPiece2(ptype,pcolor,startpos);
     case BISHOP:
-     // return new ChessPieceBishop(pcolor, startpos);
+
       return ChessPiece2(ptype,pcolor,startpos);
     case ROOK:
-      //return new ChessPieceRook(pcolor, startpos);
+
       return ChessPiece2(ptype,pcolor,startpos);
     case QUEEN:
-     //return new ChessPieceQueen(pcolor, startpos);
+
       return ChessPiece2(ptype,pcolor,startpos);
     default:
-      //return new ChessPieceKing(pcolor, startpos);
+
       return ChessPiece2(ptype,pcolor,startpos);
     }
   }
@@ -93,7 +89,7 @@
   void setPosition(Cell newpos, ChessPiece* piece)
   {
     (*piece).position = newpos;
-    (*piece).moved++;
+   // (*piece).moved++;
   }
 
   Cell getStartPosition(ChessPiece* piece)

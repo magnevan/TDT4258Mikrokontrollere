@@ -3,6 +3,16 @@
 /*this class is responsible for displaying things on the screen of the devboard*/
 #include "piece_types.h"
 #include "color_types.h"
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <linux/fb.h>
+#include <fcntl.h>
+#define FILEPATH "/dev/fb0"
+#define FILESIZE (320*240)
+
 void button_handler(int signo);
 void init_gamepad();
 int screenclear(short* map, int fd);

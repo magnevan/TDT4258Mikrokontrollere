@@ -1,11 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
+
 #include <sys/stat.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <linux/fb.h>
+
 #include <sys/ioctl.h>
 #include <signal.h>
 #include "screen.h"
@@ -13,7 +8,7 @@
 //#define FILEPATH "/dev/fb0"
 #define GAMEPAD "/dev/gamepad"
 
-#define FILESIZE (320*240)
+
 struct fb_copyarea rect;
 struct fb_var_screeninfo vinfo;
 struct fb_fix_screeninfo finfo;

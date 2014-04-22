@@ -1,13 +1,12 @@
 // Kontrollert av eirik flogard
 
-#include "ui/chess_view_terminal.h"
+#include "chess_view_terminal.h"
 #include "chess_game.h"
 #include "chess_rules.h"
 
 
-#include <string>
+#include <string.h>
 
-//#include <iostream>
 
 
 ChessGame* chessgame1(viewType UIType, 
@@ -16,55 +15,58 @@ ChessGame* chessgame1(viewType UIType,
   ChessGame* chessgame=(ChessGame*) malloc(sizeof(ChessGame));
   
     // Oppretter view-objektet
-    //view = new ChessViewTerm(this); må finne annen løsning
 
     // Opprettet spillere
-    //players = malloc(2*sizeof(*players));//new Player[2];
 
-  (*chessgame).players[0] = Player1("Player 1 \0", player1_type, BLACK);
 
-    //std::string nameinput = view->getName();
-   // std::string name;//change?
-   
-      //name = "Player 2";
+  (*chessgame).players[0] = Player1("Player 1", player1_type, BLACK);
+
+
 
     (*chessgame). players[1] = Player1("Player 2", player2_type, WHITE);
-
+//NB playernames are not yet initialized
     (*chessgame).view=ChessViewTerm(chessgame);
-    //view->printPlayers(players); dont needthis anyways yet
+	return chessgame;
   }
 
 
   void startGame(ChessGame* chessgame)
   {
 
-    while (true) {
-      newRound(false, chessgame);//allways start new round
-      //if (!view->getNewRound())
-      //  break;
-    }
+    //while (true) {
+      newRound(false, chessgame);
+
+    //}
   }
 
+//slowspeed is for expandable feature if we want to use graphics or similar.
   void newRound(bool slowSpeed,ChessGame* chessgame)
   {
     // Oppretter brettet
-    ChessBoard * board = Chessboard1();//setup board and initialize
+
     //I need to make a struct containing initializeable variables of chessboard?
-    initializeRound();
-    //view->printBoard(*board); we must come up with a way to display the board
+
+
+     int fd = open(FILEPATH, O_RDWR);
+    if (fd == -1) {
+    perror("Error opening file for reading");
+    exit(EXIT_FAILURE);
+    }
+    ChessBoard * board = Chessboard1();//setup board and initialize
+    short* map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
+    initializeRound(map,fd);
     int currentPlayer = 1;
-
+      printBoard(board);
     while (true) {
-      movePiece((*chessgame).players[currentPlayer], board,(*chessgame).view);
-
+      movePiece((*chessgame).players[currentPlayer], board,(*chessgame).view, map, fd);
       printBoard(board);
       if (gameIsFinished((*chessgame).players[currentPlayer], board,(*chessgame).view))
         break;
       currentPlayer = 1 - currentPlayer;
+      if (isCheck2(getPlayerColor((*chessgame).players[currentPlayer]),board)) {
 
-      if (isCheck(getColor((*chessgame).players[currentPlayer]),board)) {
-        //printMsg("*" + getName((*chessgame).players[currentPlayer]) +" is in check.*",view);
         printMsg(getName((*chessgame).players[currentPlayer]));
+	printMsg("Is in check\n");
       }
              
     }
@@ -106,32 +108,35 @@ ChessGame* chessgame1(viewType UIType,
      }
      free(deleteboard);
     free(board);
+munmap(map,FILESIZE);
+	close(fd);
   }
 
-  void movePiece(Player* player, ChessBoard* board, ChessView* view)//vi må fikse denne
+  void movePiece(Player* player, ChessBoard* board, ChessView* view, short* map, int fd)
   {
     Cell* cellFrom;
     Cell* cellTo;
     ChessPiece * piece;
     bool pieceNotMoved = true;
-    if (getType(player) != BOT) {
-      char* msg = "It's your turn. Please choose a chess piece.";
+
+getPlayerType(player);
+    if (getPlayerType(player) != BOT) {
+      char* msg = "It's your turn. Please choose a chess piece.\n";
       while (pieceNotMoved) {
         while (true) {
-          cellFrom = getCellFromPlayer(msg, false,view);//reconfigure this to the gameboard
-          piece = getPiece((*cellFrom).colum, (*cellFrom).rowum);//board
+          cellFrom = getCellFromPlayer(msg, false,view, player, board,NULL);
+          piece = getPiece((*cellFrom).colum, (*cellFrom).rowum);// method found on board
           if (piece == 0) {
             invalidCell("Not a chess piece!", cellFrom);
-            msg = "Please choose a chess piece from the board!";
-          } else if (getColor(piece) != getColor(player)) {//overloaded?
-            invalidCell("That is one of the opponent's chess pieces!",
+            msg = "Please choose a chess piece from the board!\n";
+          } else if (getColor(piece) != getPlayerColor(player)) {
+            invalidCell("That is one of the opponent's chess pieces!\n",
                               cellFrom);
-            msg = "Please choose one of you own chess pieces.";
+            msg = "Please choose one of you own chess pieces.\n";
           } else {
           int counter=0;
-            Cell* moves = getPossibleMoves(board,piece,&counter);//getpossiblemoves returnerer en vektor(array) med alle mulige moves. Gamepaden kan brukes til å velge move
+            Cell* moves = getPossibleMoves(board,piece,&counter);
             showValidMoves(moves,counter);
-            //if (moves.size() > 0)
             if (counter> 0)
             {
             
@@ -139,16 +144,16 @@ ChessGame* chessgame1(viewType UIType,
               break;
               }
               free(moves);
-            msg = "Please choose a different chess piece.";
+            msg = "Please choose a different chess piece.\n";
           }
         }
 
-        msg = "Please choose a valid square to move the piece to.";
+        msg = "Please choose a valid square to move the piece to.\n";
 
         while (true) {//will continue to prompt for moves unto a valid is selected
-          cellTo = getCellFromPlayer(msg, true,view);
+          cellTo = getCellFromPlayer(msg, true,view,player,board,cellFrom);
           if ((*cellTo).colum < 0 || (*cellTo).rowum < 0) {
-            msg = "Aborted. Please choose a chess piece.";
+            msg = "Aborted. Please choose a chess piece.\n";
 
             break;
 
@@ -156,7 +161,7 @@ ChessGame* chessgame1(viewType UIType,
           // checks if move is valid before moving
           if (validMove(board, (*cellTo),piece)) {
            movePlayerPieceTo((*cellFrom), (*cellTo), board);
-
+	  (*piece).moved++;
             pieceNotMoved = false;
             break;
           }
@@ -169,7 +174,7 @@ ChessGame* chessgame1(viewType UIType,
 
       }
     }  else {
-      printf("there is currently only one type of player");
+      printf("there is currently only one type of player\n");
       return;
     }
 
@@ -180,18 +185,17 @@ ChessGame* chessgame1(viewType UIType,
 
   bool gameIsFinished(Player* lastPlayer, ChessBoard* board, ChessView* view)
   {
-    if (win(board, getColor(lastPlayer))) {
-      //printMsg("CHECK MATE. " + getName(lastPlayer) + " won.", view);
+    if (win(board, getPlayerColor(lastPlayer))) {
       printMsg("CHECK MATE. ");
       printMsg(getName(lastPlayer) );
-      printMsg( " won.");
+      printMsg( " won.\n");
       
       return true;
-    } else if(stalemate(board, getColor(lastPlayer))) {
-      printMsg("STALEMATE. Game is a draw.");
+    } else if(stalemate(board, getPlayerColor(lastPlayer))) {
+      printMsg("STALEMATE. Game is a draw.\n");
       return true;
     } else if (tie(board)) {
-      printMsg("DRAW. Game is over.");
+      printMsg("DRAW. Game is over.\n");
       return true;
     }
 

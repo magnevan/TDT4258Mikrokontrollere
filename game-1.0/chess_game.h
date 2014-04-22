@@ -25,11 +25,15 @@ typedef struct ChessGame ChessGame;
 	      playerType player2_type);
     //~ChessGame();
 
+   /*the methods startgame and newround initializes the board and neccesary resources and starts a new round*/
     void startGame(ChessGame* chessgame);
     void newRound(bool slowSpeed,ChessGame* chessgame);
-    void movePiece(Player* player, ChessBoard* board, ChessView* view);
+    /* movePiece() is responcible for receiving input and execute moves. The method is constructed with as many sanity checks as possible to prevent any possible crash bugs 
+to occur. This means more energy use, but more stability. */
+    void movePiece(Player* player, ChessBoard* board, ChessView* view, short* map, int fd);
+	/*this method checks if the game is finished. THese methods can be found in the chessrules module*/
     bool gameIsFinished(Player* lastPlayer, ChessBoard* board, ChessView* view);
-  \
+ 
 
 
 #endif

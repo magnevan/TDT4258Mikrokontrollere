@@ -45,9 +45,8 @@
     Cell kingStartpos = getStartPosition(getPieces(getColor(piece),board)[0]);
     bool pawnMovesUp = kingStartpos.rowum == 0;
     int rowinc = (pawnMovesUp ? 1 : -1);
-    int cellsFront = (abs(kingStartpos.rowum - pos.rowum) < 2 ? 2 : 1);//how to do absolute value
-    //std::vector<Cell> moves;
-    Cell* moves=(Cell*) malloc(sizeof(Cell)*6);//Cell moves[5];//i think 5 moves should be ok
+    int cellsFront = (abs(kingStartpos.rowum - pos.rowum) < 2 ? 2 : 1);
+    Cell* moves=(Cell*) malloc(sizeof(Cell)*6);
     
     ChessPiece * pieces;
     int row = pos.rowum + rowinc;

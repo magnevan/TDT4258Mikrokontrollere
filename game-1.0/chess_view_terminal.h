@@ -11,7 +11,7 @@
   ChessView* ChessViewTerm(ChessGame* gameref);
     
 
-   void initializeRound(); // initalize windows for new rounds
+   void initializeRound(short* map, int fd); // initalize windows for new rounds
 
     // Viser brettets tilstand på skjermen.
   void printBoard(ChessBoard* board); //remove&change
@@ -20,7 +20,7 @@
    void showValidMoves(Cell* moves, int size); //needed, change
 
     // Ber brukeren velge en celle som brikken skal flyttes til
-    Cell* getCellFromPlayer(char* msg, bool pieceChosen, ChessView* view);
+    Cell* getCellFromPlayer(char* msg, bool pieceChosen, ChessView* view, Player* player, ChessBoard* board,Cell* cellFrom);
 
     // Gir beskjed at denne cellen ikke kan velges.
     void invalidCell(char* msg, Cell* cell);
@@ -31,7 +31,7 @@
     void printMsg(char* msg);
     void printErrorMsg(char* err);
 
-    Cell* askPlayerForACell(bool pieceChosen);
+    Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell* cellFrom);
 
 char* pieceToString(pieceType type, colorType color, short* map, int fd,int col, int row);
 void drawpieces(pieceType type, colorType color, short* map, int fd,int col, int row);

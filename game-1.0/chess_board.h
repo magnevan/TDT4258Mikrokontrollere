@@ -10,8 +10,8 @@
 
 
     // Brikkene på brettet.
-    static ChessPiece *** board;//the name "board" need to be static since the name is reused as arguments
-//typedef enum { false, true } bool;
+    static ChessPiece *** board;//a predeclaration of the board
+
     /* 
      * En vector av brikkepekere til hver av spillerne. De er sortert etter
      * poengsum i synkende rekkefølge.
@@ -22,16 +22,12 @@ typedef struct ChessBoard ChessBoard;
     ChessPiece** piecesCaptured[2];
     int piecescapturedlength[2];//må ha farge også
     int pieceslength[2];//må ha farge også
-    int turns; // Totalt antall trekk
+    int turns; // Totalt antall trekk utført
 
     bool check[2]; // Sannhetsverdi på om det er sjakk for spilleren.
 };
     void initializeBoard(ChessBoard* chessboard);
 
-
- //public:
-   // ChessBoard();
-    //~ChessBoard();
 
     /* 
      * Returnerer en peker til brikken som ligger i den ruten som sendes som
@@ -40,7 +36,7 @@ typedef struct ChessBoard ChessBoard;
        ChessBoard* Chessboard1();
     ChessPiece* getPiece(int col, int row);
     ChessPiece*** getallPieces();//returnerer den statiske "boardpekeren" ovenfor. Brukes primært for free().
-    //void redoPromotion(Cell position,colorType color,ChessPiece* lastPiece);
+
     /* 
      * Returnerer en vector av brikkepekere for en spiller som har den fargen på
      * brikken som sendes som argument. Brikkene er stortert etter poengsum i

@@ -80,9 +80,7 @@
     else if((*board).pieceslength[BLACK]==2&&(*board).pieceslength[WHITE]==2){
       ChessPiece * pieceBlack = piecesBlack[1];
       ChessPiece * pieceWhite = piecesWhite[1];
-      //if (pieceBlack->getType() == BISHOP && pieceWhite->getType() == BISHOP &&
-        //  (pieceBlack->getStartPosition().col % 2) != 
-          //(pieceWhite->getStartPosition().col % 2)) {
+
           if(getType(pieceBlack)==BISHOP&&getType(pieceWhite)==BISHOP&&
           (getStartPosition(pieceBlack).colum%2)!=(getStartPosition(pieceWhite).colum%2)){
         return true;
@@ -132,7 +130,6 @@ int i=0;
       movePieceWithoutCheck(pieceToMove, to,board);
       bool check = isCheck(board, kingColor);
       movePieceWithoutCheck(pieceToMove, from,board);
-
       if (capturedPiece) {
 	if(getColor(pieceToMove)==BLACK)
        placeBackLastCapturedPiece(WHITE,board);
@@ -245,17 +242,13 @@ int i=0;
     int inc = (rightOrUp ? 1 : -1);
     int colOrRow = (vertical ? row : col);
 
-    //for (; (rightOrUp ? (colOrRow < 8) : (colOrRow >= 0)); colOrRow += inc) {
     while(rightOrUp ? (colOrRow < 8) : (colOrRow >= 0)){
 
       if (vertical) {
         piece = getPiece(col, colOrRow);
-        //std::cout << "col/row: " << char(65 + col) << colOrRow + 1
-        //<< std::endl;
       }
       else {
-        //std::cout << "col/row: " << char(65 + colOrRow) << row + 1
-        //<< std::endl;
+
         piece = getPiece(colOrRow, row);
       }
       
@@ -335,11 +328,9 @@ int counter=0;
     Cell* cellsInPattern =
       getCellsInKnightMovePattern(kingPos,piece,&counter);//ChessPieceKnight free
 
-    //std::vector<Cell>::iterator it = cellsInPattern.begin();
+
     int i=0;
-    //for (; it != cellsInPattern.end(); it++) {
     while(i<counter){
-      //piece = board.getPiece(it->col, it->row);
       piece = getPiece(cellsInPattern[i].colum, cellsInPattern[i].rowum);
       if (piece != 0 && getColor(piece) != kingColor &&
           getType(piece) == KNIGHT) {
