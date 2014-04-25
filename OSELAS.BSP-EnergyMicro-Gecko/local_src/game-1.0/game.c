@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
     printf("Hello World, I'm game!!!! 1\n");
     int  fd = open(FILEPATH, O_RDWR);
     if (fd == -1) {
-    perror("Error opening file for reading");
-    exit(EXIT_FAILURE);
+        perror("Error opening file for reading");
+        exit(EXIT_FAILURE);
     }
 
     short*  map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
@@ -64,12 +64,12 @@ void button_handler(int signo)
 
 void init_gamepad()
 {
-   gamepad = fopen(GAMEPAD, "rb"); 
-   signal(SIGIO, &button_handler);
-   fcntl(fileno(gamepad), F_SETOWN, getpid());
-   long oflags = fcntl(fileno(gamepad), F_GETFL);
-   fcntl(fileno(gamepad), F_SETFL, oflags | FASYNC);
-   printf("gamepad initialized\n");
+    gamepad = fopen(GAMEPAD, "rb"); 
+    signal(SIGIO, &button_handler);
+    fcntl(fileno(gamepad), F_SETOWN, getpid());
+    long oflags = fcntl(fileno(gamepad), F_GETFL);
+    fcntl(fileno(gamepad), F_SETFL, oflags | FASYNC);
+    printf("gamepad initialized\n");
 }
 
 int screenclear(short* map, int fd)
