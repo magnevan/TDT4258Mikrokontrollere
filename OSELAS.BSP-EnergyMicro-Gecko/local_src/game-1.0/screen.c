@@ -368,8 +368,6 @@ void printpiece(short* map, int fd, pieceType type, colorType color, int col, in
     }
 
     free(picture);
-    printf("printpiece %d %d\n", type, color);
-
     
     rect.dx = col * 30;
     rect.dy = (7-row) * 30;

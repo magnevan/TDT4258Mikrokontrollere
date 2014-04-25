@@ -314,7 +314,9 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
             piece = getPiece((*cellFrom).colum, (*cellFrom).rowum);
             int length=0;
             Cell* moves = getPossibleMoves(board,piece,&length);
-            printmarker(map, fd, 1, moves[counter].colum, moves[counter].rowum);
+            col = moves[counter].colum;
+            row = moves[counter].rowum;
+            printmarker(map, fd, 1, col, row);
             while(true)
             {
                 while(true)
