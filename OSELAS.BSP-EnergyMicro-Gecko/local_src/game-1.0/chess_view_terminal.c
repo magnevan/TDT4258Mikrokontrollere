@@ -282,7 +282,7 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
 
                 if(input == 1 &&counter>0)//replace this with buttoncheck
                     counter--;
-                else if(input == 2 && counter<((*board).pieceslength[getPlayerColor(player)]-1))
+                else if(input == 3 && counter<((*board).pieceslength[getPlayerColor(player)]-1))
                     counter++;
                 else
                     printf("Invalid input. Write 1 or -1 to choose a piece\n");
@@ -328,7 +328,7 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
 
                 if(input == 1 && counter>0)//replace this with buttoncheck
                     counter--;
-                else if(input == 2&&counter<(length-1))//replace input1 check with buttoncheck
+                else if(input == 3&&counter<(length-1))//replace input1 check with buttoncheck
                     counter++;
                 else
                     printf("Invalid selection. Write 1 or -1 to choose a where to move\n");
