@@ -34,7 +34,6 @@ void printErrorMsg(char* err);
 Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell* cellFrom);
 
 char* pieceToString(pieceType type, colorType color, short* map, int fd,int col, int row);
-void drawpieces(pieceType type, colorType color, short* map, int fd,int col, int row);
 
 
 

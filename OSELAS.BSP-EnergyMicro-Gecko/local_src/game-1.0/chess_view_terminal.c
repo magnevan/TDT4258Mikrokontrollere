@@ -30,7 +30,7 @@ void initializeRound(short* map, int fd)
             piece = getPiece(col, row);
             type = piece != 0 ? getType(piece) : EMPTY;
             color = (piece != 0 ? getColor(piece) : BLACK);
-            drawpieces(type, color,map,fd,col,row);
+            printpiece(map, fd, type, color, col, row);
             col++;
         }
         row--;
@@ -230,28 +230,8 @@ void pieceMoved(Player* player, Cell* from, Cell* to)
     printf("%d", ((*to).rowum + 1));
     printf("\n");
 
-    switch(type) {
-        case EMPTY:
-            break;
-        case PAWN:
-            printpiecePawn(map,fd,color,(*to).colum,(*to).rowum);
-            break;
-        case ROOK:
-            printpieceRook(map,fd,color,(*to).colum,(*to).rowum);
-            break;
-        case BISHOP:
-            printpieceBishop(map,fd,color,(*to).colum,(*to).rowum);
-            break;
-        case KNIGHT:
-            printpieceKnight(map,fd,color,(*to).colum,(*to).rowum);
-            break;
-        case QUEEN:
-            printpieceQueen(map,fd,color,(*to).colum,(*to).rowum);
-            break ;
-        default:
-            printpieceKing(map,fd,color,(*to).colum,(*to).rowum);
-            break ;
-    }
+    printpiece(map, fd, type, color, to->colum, to->rowum);
+
     munmap(map,FILESIZE);
     close(fd);
 }
@@ -274,8 +254,16 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
     ChessPiece** pieces;
     ChessPiece* piece;
     char counter=0;
-    int col, row;
+    int col = 0, row = 0;
     int input;
+
+    int fd = open(FILEPATH, O_RDWR);
+    if (fd == -1) {
+        perror("Error opening file for reading");
+        exit(EXIT_FAILURE);
+    }
+    short* map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
+
     while (true) {
 
 
@@ -300,6 +288,8 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
                     printf("Invalid input. Write 1 or -1 to choose a piece\n");
                 pieceType type = pieces[counter] != 0 ? getType(pieces[counter]) : EMPTY;
 
+                printmarker(map, fd, 0, col, row);
+
                 col = getPosition(pieces[counter]).colum;
                 row = getPosition(pieces[counter]).rowum;
                 printf("%s" ,pieceToString(type, getPlayerColor(player), NULL,0,col, row));
@@ -307,8 +297,14 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
                 printf(" %c",(col + 65) );
                 printf("%d", (row + 1));
                 printf(" is selected\n");
+
+                printmarker(map, fd, 1, col, row);
+
                 if( input == 8)
+                {
+                    printmarker(map, fd, 0, col, row);
                     break;
+                }
             }
 
         }
@@ -318,6 +314,7 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
             piece = getPiece((*cellFrom).colum, (*cellFrom).rowum);
             int length=0;
             Cell* moves = getPossibleMoves(board,piece,&length);
+            printmarker(map, fd, 1, moves[counter].colum, moves[counter].rowum);
             while(true)
             {
                 while(true)
@@ -335,6 +332,8 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
                     printf("Invalid selection. Write 1 or -1 to choose a where to move\n");
                 printf("write 9 to abort to chose new piece. Write 8 to confirm selection\n");
 
+                printmarker(map, fd, 0, col, row);
+
                 pieceType type = piece != 0 ? getType(piece) : EMPTY;
                 col = moves[counter].colum;
                 row = moves[counter].rowum;
@@ -343,9 +342,17 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
                 printf(" %c",(moves[counter].colum + 65) );
                 printf("%d", (moves[counter].rowum + 1));
                 printf(" is selected\n");
+
+                printmarker(map, fd, 1, col, row);
+
                 if(input == 8)//7 is abort and 8 is ok, change this to test the button vector
+                {
+                    printmarker(map,fd, 0, col, row);
                     break;
-                else if(input == 7){
+                }
+                else if(input == 7)
+                {
+                    printmarker(map,fd, 0, col, row);
                     row=-1;
                     col=-1;
                     break;
@@ -356,6 +363,9 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
             }
 
         }
+        munmap(map, FILESIZE);
+        close(fd);
+
         Cell* cell2=(Cell*) malloc(sizeof(Cell));
         (*cell2).rowum=row;
         (*cell2).colum=col;
@@ -391,31 +401,3 @@ char* pieceToString(pieceType type, colorType color, short* map, int fd,int col,
             return (color == BLACK ? "♔" : "♚");
     }
 }
-
-void drawpieces(pieceType type, colorType color, short* map, int fd,int col, int row)
-{
-    switch(type) {
-        case EMPTY: //no output for empty piece
-            return;
-        case PAWN:
-            printpiecePawn(map,fd,color,col,row);
-            return ;
-        case ROOK:
-            printpieceRook(map,fd,color,col,row);
-            return;
-        case BISHOP:
-            printpieceBishop(map,fd,color,col,row);
-            return;
-        case KNIGHT:
-            printpieceKnight(map,fd,color,col,row);
-            return;
-        case QUEEN:
-            printpieceQueen(map,fd,color,col,row);
-            return;
-        default:
-            printpieceKing(map,fd,color,col,row);
-            return;
-    }
-
-}
-

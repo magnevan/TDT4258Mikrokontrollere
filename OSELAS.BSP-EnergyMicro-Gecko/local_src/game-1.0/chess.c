@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
             (termPlayer1 ? TERMINAL : BOT),
             TERMINAL);
 
+    init_gamepad();
     startGame(chessgame);
     free((*chessgame).players[0]);
     free((*chessgame).players[1]);
