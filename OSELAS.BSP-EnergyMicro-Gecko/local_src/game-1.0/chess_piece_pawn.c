@@ -14,11 +14,10 @@
 
 bool validMovePawn(ChessBoard* board, Cell pos, ChessPiece* piece)//careful with references
 {
-    // TODO: Optimaliser dette.
-    //std::vector<Cell> moves = getPossibleMoves(board);
+
     int count=0;
     Cell* moves=getPossibleMovesPawn(board, piece, &count);
-    //std::vector<Cell>::iterator im;
+
     int i=0;
     while(i<count)//sizeof array
     { 
@@ -31,10 +30,7 @@ bool validMovePawn(ChessBoard* board, Cell pos, ChessPiece* piece)//careful with
     }
 
     free(moves);
-    // for (im = moves.begin(); im != moves.end(); im++ ) {
-    //if (*im == pos)
-    //  return true;
-    //}
+
 
     return false;
 }
@@ -51,7 +47,7 @@ Cell* getPossibleMovesPawn(ChessBoard* board,ChessPiece* piece, int* movinc)//wa
     ChessPiece * pieces;
     int row = pos.rowum + rowinc;
     int i=0;
-    //optimize this, unnecessary to use copying of cells into arrays
+
     Cell cell;
     cell.colum=pos.colum;
     cell.rowum=row;
@@ -71,18 +67,7 @@ Cell* getPossibleMovesPawn(ChessBoard* board,ChessPiece* piece, int* movinc)//wa
         row += rowinc;
         i++;
     }
-    /* for (int i = 0; i < cellsFront; i++ ) {
-       if (row > 7 || row < 0)
-       return moves;
-       pieces = (*board).getPiece(pos.col, row);
-       if (pieces != 0)
-       break;
 
-       if(!ChessRules::isCheckOnMove((*board), this, pos, Cell(pos.col, row)))
-       moves.push_back(Cell(pos.col, row));
-
-       row += rowinc;
-       }*/
 
     //this checks if a pawn can move diagonal
     if (pos.colum != 0 && pos.rowum + rowinc < 8 && pos.rowum + rowinc > -1) {

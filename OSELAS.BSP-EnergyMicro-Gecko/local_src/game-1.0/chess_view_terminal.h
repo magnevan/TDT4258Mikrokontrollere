@@ -14,7 +14,7 @@ ChessView* ChessViewTerm(ChessGame* gameref);
 void initializeRound(short* map, int fd); // initalize windows for new rounds
 
 // Viser brettets tilstand på skjermen.
-void printBoard(ChessBoard* board); //remove&change
+void printBoard(ChessBoard* board); 
 
 // Viser mulige trekk.
 void showValidMoves(Cell* moves, int size); //needed, change

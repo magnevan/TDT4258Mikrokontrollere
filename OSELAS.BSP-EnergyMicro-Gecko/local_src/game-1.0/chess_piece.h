@@ -7,7 +7,7 @@
 #include "piece_types.h"
 #include "color_types.h"
 
-//#include "chess_board.h"
+
 
 typedef struct ChessBoard ChessBoard;
 struct ChessBoard;//forward declaration of chessboard

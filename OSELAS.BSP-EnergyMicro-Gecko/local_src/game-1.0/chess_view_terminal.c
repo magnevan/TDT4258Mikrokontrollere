@@ -216,7 +216,7 @@ void pieceMoved(Player* player, Cell* from, Cell* to, ChessBoard* board)
         exit(EXIT_FAILURE);
     }
     short* map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
-
+//there are now multiple instances of mmap, but this should not be any problem because there are no need for any mutexes
     ChessPiece* piece = getPiece((*to).colum, (*to).rowum);
     pieceType type = piece != 0 ? getType(piece) : EMPTY;
     colorType color = (piece != 0 ? getColor(piece) : BLACK);

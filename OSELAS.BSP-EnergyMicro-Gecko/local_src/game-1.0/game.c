@@ -13,6 +13,8 @@
 #define GAMEPAD "/dev/gamepad"
 
 #define FILESIZE (320*240)
+
+/*game.c is not used for anything. See chess.c for main method. It is a proof that we have completed the first steps of the exercise as described in the compendium*/
 struct fb_copyarea rect;
 struct fb_var_screeninfo vinfo;
 struct fb_fix_screeninfo finfo;

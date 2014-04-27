@@ -7,13 +7,13 @@
 //#include "chess_piece_straight.h"
 #include "chess_rules.h"
 
-//#include <iostream>
+
 
 
 
 Cell* getPossibleMovesStraight(ChessBoard* board, ChessPiece* pieces, int* counter)
 {
-    Cell* moves= (Cell*) malloc(sizeof(Cell)*17);//Cell[] moves;
+    Cell* moves= (Cell*) malloc(sizeof(Cell)*17);
     //counter should not be reset after a call of method
     getMovesStraight(board, pieces, moves, true, true, counter);   // Oppover
     getMovesStraight(board, pieces, moves, true, false, counter);  // Nedover
@@ -51,23 +51,14 @@ bool validMoveStraight(ChessBoard* board, ChessPiece* pieces, Cell to)
             }
             row += rowInc;
         }
-        /*for (; (upwards ? (row <= to.rowum) : (row >= to.rowum)); row += rowInc) {
-          cell = Cell(col, row);
-          piece = board.getPiece(col, row);
-          if (piece != 0) {
-          if (row != to.rowum)
-          return false;
-          else
-          break;
-          }
-          }*/
+
     } else {
         bool right=true;
         if(to.colum>ownPos.colum)
             right=true;
         else
             right=false;
-        //bool right = to.col > ownPos.col;
+
         int colInc = (right ? 1 : -1);
         col += colInc;
         while((right ? (col <= to.colum) : (col >= to.colum)))
@@ -83,16 +74,7 @@ bool validMoveStraight(ChessBoard* board, ChessPiece* pieces, Cell to)
             }
             col += colInc;
         }
-        /*for(; (right ? (col <= to.colum) : (col >= to.colum)); col += colInc) {
-          cell = Cell(col, row);
-          piece = board.getPiece(col, row);
-          if (piece != 0) {
-          if (col != to.col)
-          return false;
-          else
-          break;
-          }
-          }*/
+
     } // end of if-else
 
     if (piece == 0 && isCheckOnMove(board, pieces, ownPos, cell)) {
@@ -117,7 +99,7 @@ void getMovesStraight(ChessBoard* board, ChessPiece* pieces,
     if (vertical) {
         int rowInc = (rightOrUp ? 1 : -1);
         row += rowInc;
-        //for (; (rightOrUp ? (row < 8) : (row > -1)); row += rowInc) {
+
         while((rightOrUp ? (row < 8) : (row > -1)))
         {
             piece = getPiece(col, row);
@@ -125,11 +107,11 @@ void getMovesStraight(ChessBoard* board, ChessPiece* pieces,
             cell.rowum=row;
             if (piece == 0 && !isCheckOnMove((board), pieces, ownPos,
                         cell)) {
-                moves[(*counter)++]=cell;//moves.push_back(Cell(col, row));
+                moves[(*counter)++]=cell;
             } else if (piece != 0) {
                 if (getColor(piece) != getColor(pieces) &&
                         !isCheckOnMove((board), pieces, ownPos, cell))
-                    moves[(*counter)++]=cell;//moves.push_back(Cell(col, row));
+                    moves[(*counter)++]=cell;
 
                 return;
             }
@@ -138,7 +120,7 @@ void getMovesStraight(ChessBoard* board, ChessPiece* pieces,
     } else {
         int colInc = (rightOrUp ? 1 : -1);
         col += colInc;
-        //for(; (rightOrUp ? (col < 8) : (col > -1)); col += colInc) {
+
         while((rightOrUp ? (col < 8) : (col > -1)))
         {
             piece = getPiece(col, row);
@@ -146,11 +128,11 @@ void getMovesStraight(ChessBoard* board, ChessPiece* pieces,
             cell.colum=col;
             if (piece == 0 && !isCheckOnMove((board), pieces, ownPos,
                         cell)) {
-                moves[(*counter)++]=cell;//moves.push_back(Cell(col, row));
+                moves[(*counter)++]=cell;
             } else if (piece != 0) {
                 if (getColor(piece) != getColor(pieces) &&
                         !isCheckOnMove(board, pieces, ownPos, cell)) {
-                    moves[(*counter)++]=cell;//moves.push_back(Cell(col, row));
+                    moves[(*counter)++]=cell;
                 }
 
                 return;

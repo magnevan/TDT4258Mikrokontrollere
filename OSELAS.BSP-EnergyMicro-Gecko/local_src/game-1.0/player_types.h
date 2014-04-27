@@ -5,6 +5,6 @@
 
 
 typedef enum{TERMINAL, BOT} playerType;
-
+//BOT is not currently use. please see the report
 
 #endif

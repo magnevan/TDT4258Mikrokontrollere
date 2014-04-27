@@ -16,7 +16,7 @@ bool smallCastling(ChessBoard* board, ChessPiece* pieces, Cell ownPos)
         ChessPiece** piecevector = getPieces(getColor((pieces)),board);//found in board
         int piecevectorlength=(*board).pieceslength[getColor((pieces))];
         int i=0;
-        //for(int i=0; i<piecevectorlength; i++)//fix size()
+
         while(i<piecevectorlength)
         {
             if(cellequals(getPosition(piecevector[i]),
@@ -29,7 +29,7 @@ bool smallCastling(ChessBoard* board, ChessPiece* pieces, Cell ownPos)
                     continue;
                 }
                 int j=ownPos.colum+1;
-                // for(int j=ownPos.col+1; j<rookpos.col; j++)//liten rokkade, checking for obstructions
+
                 while(j<rookpos.colum)
                 {
                     if(getPiece(j,rad)!=0)
@@ -51,10 +51,10 @@ bool bigCastling(ChessBoard* board, ChessPiece* pieces, Cell ownPos)
 {
     //upper if check is a redundant check for better performance. There will be no check for castling if the piece already has moved.
     if(cellequals(ownPos, getStartPosition(pieces))&&(*pieces).moved==0) {
-        ChessPiece** piecevector = getPieces(getColor((pieces)),board);//must fix this later
+        ChessPiece** piecevector = getPieces(getColor((pieces)),board);
         int piecevectorlength=(*board).pieceslength[getColor((pieces))];
         int i=0;
-        //for(int i=0; i<piecevectorlength; i++)//fix size()
+
 
         while(i<piecevectorlength)
         {
@@ -72,7 +72,7 @@ bool bigCastling(ChessBoard* board, ChessPiece* pieces, Cell ownPos)
                 }
                 int j=rookpos.colum+1;
 
-                //for(int j=rookpos.col+1; j<ownPos.col; j++)//utfør stor rokkade
+
                 while(j<ownPos.colum)
                 {
                     if(getPiece(j,rad)!=0)

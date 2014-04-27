@@ -15,15 +15,15 @@ bool validMoveQueen(ChessBoard* board,ChessPiece* pieces, Cell to)
             validMoveDiagonal(board, pieces, to));
 }
 
-Cell* getPossibleMovesQueen(ChessBoard* board, ChessPiece* pieces, int* counter)//hope this works
+Cell* getPossibleMovesQueen(ChessBoard* board, ChessPiece* pieces, int* counter)
 {
     //remember to initialize counter
     Cell* moves1 = getPossibleMovesStraight(board,pieces,counter);
     int temp= (*counter);
     (*counter)=0;
-    //std::vector<Cell> moves2 = ChessPieceDiagonal::getPossibleMoves(board);
+
     Cell* moves2 = getPossibleMovesDiagonal(board,pieces,counter);
-    Cell* finalmoves=(Cell*) malloc(sizeof(Cell)*temp+sizeof(Cell)*(*counter));//[temp+(*counter)];
+    Cell* finalmoves=(Cell*) malloc(sizeof(Cell)*temp+sizeof(Cell)*(*counter));
     int i=0;
     while(i<temp)
     {
@@ -41,7 +41,7 @@ Cell* getPossibleMovesQueen(ChessBoard* board, ChessPiece* pieces, int* counter)
     (*counter)=(*counter)+temp;
     free(moves1);
     free(moves2);
-    //moves1.insert(moves1.end(), moves2.begin(), moves2.end());
+
     return finalmoves;
 }
 

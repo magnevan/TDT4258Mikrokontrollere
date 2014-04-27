@@ -5,7 +5,7 @@
 #include "chess_board.h"
 #include "chess_rules.h"
 
-//#include <iostream>
+
 
 bool win(ChessBoard* board, colorType lastColorMove)
 {
@@ -35,8 +35,6 @@ bool stalemate(ChessBoard* board, colorType lastColorMove)//check for remis
     else
         nextColorMove=BLACK;
 
-    //colorType nextColorMove = colorType(1 - lastColorMove);
-    //return !isCheck(nextColorMove,board) && !hasMoves(board, nextColorMove);
 
     if(!isCheck2(nextColorMove, board) && !hasMoves(board, nextColorMove))
     {
@@ -57,26 +55,26 @@ bool tie(ChessBoard* board)
     ChessPiece** piecesWhite = getPieces(WHITE, board);//board file
     pieceType pType;
 
-    //if (piecesBlack.size() == 1 && piecesWhite.size() == 1)
+
     if((*board).pieceslength[BLACK]==1&&(*board).pieceslength[WHITE]==1)
         return true; // Konge mot konge
 
-    //if (piecesBlack.size() == 1) {
+
     if((*board).pieceslength[BLACK]==1){
         if ((*board).pieceslength[WHITE] == 2) {
             pType = getType(piecesWhite[1]);
             if (pType == KNIGHT || pType == BISHOP)
                 return true;
         }
-    } //else if (piecesWhite.size() == 1) {
+    } 
     else if((*board).pieceslength[WHITE]==1){
-        //if (piecesBlack.size() == 2) {
+
         if((*board).pieceslength[BLACK]==2){
             pType =getType( piecesBlack[1]);
             if (pType == KNIGHT || pType == BISHOP)
                 return true;
         }
-    } //else if (piecesBlack.size() == 2 && piecesWhite.size() == 2) {
+    } 
         else if((*board).pieceslength[BLACK]==2&&(*board).pieceslength[WHITE]==2){
             ChessPiece * pieceBlack = piecesBlack[1];
             ChessPiece * pieceWhite = piecesWhite[1];
@@ -95,14 +93,14 @@ bool tie(ChessBoard* board)
         bool moves = false;
         ChessPiece** pieces = getPieces(color,board);
         int piecelength=(*board).pieceslength[color];
-        //std::vector<ChessPiece*>::iterator it;
+
         int i=0;
-        //for (it = pieces.begin(); it != pieces.end(); it++) {
+
         while(i<piecelength){
             int counter=0;
 
             getPossibleMoves( board, pieces[i], &counter);
-            // if (getPossibleMoves(board).size() > 0) {
+
 
             if(counter>0){
                 moves = true;
@@ -185,7 +183,7 @@ bool tie(ChessBoard* board)
 
         bool isCheck(ChessBoard* board, colorType kingColor)
         { 
-            // TODO: Bør bruke brikkenes validMove-metode istedenfor?
+
             return (
                     // Sjekker vertikalt for motstanders konge, dronning eller tårn
                     isCheckStraight(board, kingColor, true, true) ||

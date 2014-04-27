@@ -1,6 +1,6 @@
 // Kontrollert av Eirik FLogard
 
-//#include <string>
+
 
 #include "chess_player.h"
 #include <stdlib.h>

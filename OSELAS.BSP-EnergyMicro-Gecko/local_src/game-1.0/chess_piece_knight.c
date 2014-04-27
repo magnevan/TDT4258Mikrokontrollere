@@ -7,8 +7,6 @@
 #include "chess_rules.h"
 
 
-/*const int knightmovePatterns[4][2] =
-  {{-2, -1}, {-1, -2}, {1, -2}, {2,-1}};*/
 
 
 
@@ -40,18 +38,18 @@ bool validMoveKnight(ChessBoard* board, Cell to, ChessPiece* piecen)
     }
 
     return false;
-} // end of method validdMove(ChessBoard & board, Cell to)
+} // end of method 
 
 Cell* getPossibleMovesKnight(ChessBoard* board, ChessPiece* pieces, int* counter)
 {
     Cell ownPos = getPosition(pieces);
-    Cell* moves=(Cell*) malloc(sizeof(Cell)*8);//Cell moves[8];//std::vector<Cell> moves;
+    Cell* moves=(Cell*) malloc(sizeof(Cell)*8);
     int movecount=0;
     ChessPiece * piece;
 
     (*counter)=0;
     Cell* cellsInPattern = getCellsInKnightMovePattern(ownPos, pieces, counter);
-    //std::vector<Cell>::iterator it = cellsInPattern.begin();
+
     int i=0;
     //counter er her antall moves fra cellsinpattern
     while(i<(*counter))
@@ -69,24 +67,14 @@ Cell* getPossibleMovesKnight(ChessBoard* board, ChessPiece* pieces, int* counter
     }
     (*counter)=movecount;
     free(cellsInPattern);
-    /* for (; it != cellsInPattern.end(); it++) {
-       piece = board.getPiece(it->col, it->row);
-       if (piece == 0 && !ChessRules::isCheckOnMove(board, this, ownPos,
-       Cell(it->col, it->row))) {
-       moves.push_back(*it);
-       } else if (piece != 0 && piece->getColor() != getColor() &&
-       !ChessRules::isCheckOnMove(board, this, ownPos,
-       Cell(it->col, it->row))) {
-       moves.push_back(*it);
-       }
-       }*/
+
 
     return moves;
-} // end of method getPossibleMoves(ChessBoard & board)
+} // end of method 
 
 Cell* getCellsInKnightMovePattern(Cell from,ChessPiece* pieces, int* counter)
 {
-    //Cell cells[8];
+
     Cell* cells=(Cell*) malloc(sizeof(Cell)*8);
     Cell cell;
     cell.colum=from.colum;
@@ -109,7 +97,7 @@ Cell* getCellsInKnightMovePattern(Cell from,ChessPiece* pieces, int* counter)
             {
                 cell.colum=col;
                 cell.rowum=row;
-                cells[(*counter)++]=cell;//cells.push_back(Cell(col, row));
+                cells[(*counter)++]=cell;
             }
         }
     }

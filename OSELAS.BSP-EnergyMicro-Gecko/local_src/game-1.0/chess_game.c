@@ -164,11 +164,7 @@ void movePiece(Player* player, ChessBoard* board, ChessView* view, short* map, i
                 if (validMove(board, (*cellTo),piece)) {
 		   if((*cellTo).rowum==(*cellFrom).rowum && (*cellTo).colum==((*cellFrom).colum+2)) {
 			//liten rokkade,ischeckonmove
-			int crow;
-			if(getColor(piece)==BLACK)
-			crow=7;
-			else
-			crow=0;
+
 			if(smallCastling(board,piece,(*cellFrom))) {
 				smallcastle=true;
 				drawboard(map,fd);
@@ -177,11 +173,7 @@ void movePiece(Player* player, ChessBoard* board, ChessView* view, short* map, i
 		   
 		    } else if((*cellTo).rowum==(*cellFrom).rowum&&(*cellTo).colum==((*cellFrom).colum-3)) {
 			//ischeckonmove
-			int crow;
-			if(getColor(piece)==BLACK)
-			crow=7;
-			else
-			crow=0;
+
 			if(bigCastling(board,piece,(*cellFrom)))
 			{
 			bigcastle=true;

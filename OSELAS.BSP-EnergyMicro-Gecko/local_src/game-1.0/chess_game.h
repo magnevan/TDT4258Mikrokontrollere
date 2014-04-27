@@ -20,10 +20,10 @@ struct ChessGame
     // View
     ChessView * view;
 };
-// public:
+
 ChessGame* chessgame1(viewType UItype, playerType player1_type,
         playerType player2_type);
-//~ChessGame();
+
 
 /*the methods startgame and newround initializes the board and neccesary resources and starts a new round*/
 void startGame(ChessGame* chessgame);

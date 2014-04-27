@@ -7,17 +7,7 @@
 #include "chess_piece.h"
 #include "chess_rules.h"
 
-//#include <iostream>
 
-
-/*ChessPieceDiagonal::ChessPieceDiagonal() : ChessPiece()
-  {}
-
-  ChessPieceDiagonal::ChessPieceDiagonal(pieceType ptype, colorType pcolor,
-  Cell startpos) :
-  ChessPiece(ptype, pcolor, startpos)
-  {}
-  */
 Cell* getPossibleMovesDiagonal(ChessBoard* board, ChessPiece* pieces, int* counter)
 {
 
@@ -56,7 +46,7 @@ bool validMoveDiagonal(ChessBoard* board, ChessPiece* pieces, Cell to)
     //checks if some of the diagonals are obstructed
     while ((right ? (col <= to.colum) : (col >= to.colum)) &&
             (upwards ? (row <= to.rowum) : (row >= to.rowum))) {
-        //cell = Cell(col, row);
+
         cell.rowum=row;
         cell.colum=col;
         piece = getPiece(col, row);
@@ -105,12 +95,12 @@ void getMovesDiagonal(ChessBoard* board, ChessPiece* pieces,
         cell.colum=col;
         if (piece == 0 && !isCheckOnMove(board, pieces, ownPos,
                     cell)) {
-            moves[(*counter)++]=cell;//moves.push_back(Cell(col, row));
+            moves[(*counter)++]=cell;
         } else if (piece !=0) {
             if (getColor(piece) != getColor(pieces) &&
                     !isCheckOnMove(board, pieces, ownPos,
                         getPosition(piece))) {
-                moves[(*counter)++]=cell; //moves.push_back(Cell(col, row));
+                moves[(*counter)++]=cell; 
             }
 
             return;
@@ -120,5 +110,5 @@ void getMovesDiagonal(ChessBoard* board, ChessPiece* pieces,
         row += rowInc;
     }
 
-} // end of method ChessPieceDiagonal::getMovesDiagonal(...)
+} // end of method
 

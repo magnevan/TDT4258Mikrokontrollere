@@ -21,28 +21,7 @@ FILE* gamepad;
 
 void init_gamepad();
 
-/* la oss lage et 8x8 rutenett som dekker hele skjermen. Vi bruker to forskjellige farger. Hver brikketype har en enkel form (en tilfeldig sammensetning av piksler som representerer hver brikke). Hver brikke er angitt med en "offset" adresse relativt til en blokk ( relativ addresse angitt innenfor en range av høyde/8, bredde/8). Offset adressen blir da konstant, og den totale adressen vil da bare være en utskrift av 8x8 matrisen.*/
-/*int main(int argc, char *argv[])
-  {
-  int fd = open(FILEPATH, O_RDWR);
-  if (fd == -1) {
-  perror("Error opening file for reading");
-  exit(EXIT_FAILURE);
-  }
 
-  short* map = mmap(0, FILESIZE, PROT_WRITE, MAP_SHARED, fd, 0);
-
-  screenclear(map,fd); 
-  drawboard(map, fd);
-
-  munmap(map,FILESIZE);
-
-  init_gamepad();
-  while(1) pause();
-
-  exit(EXIT_SUCCESS);
-  }*/
-//insert a dynamic allocated array right here to writeback the vlaue from the button 
 void button_handler(int signo)
 {
     int raw_input = fgetc(gamepad);
@@ -77,7 +56,7 @@ void init_gamepad()
 
 int screenclear(short* map, int fd)
 {
-    //legg til try/catch eller noe
+
     rect.dx=0;
     rect.dy=0;
     rect.width=319;
@@ -123,7 +102,7 @@ void squareclear(short* map, int fd, int col, int row)
     // rect.dy = 0;
     // rect.width = 240;
     //rect.height = 240;
-    //optimization vs robustness: we can specify the exact square where we need to update using the variables above. However this may decrease robustness by introdusing artifacts on screen
+    //method clears a square given by col and row
     int  r, c;
     long i=320*30*(7-row);
     long j=30*(col);

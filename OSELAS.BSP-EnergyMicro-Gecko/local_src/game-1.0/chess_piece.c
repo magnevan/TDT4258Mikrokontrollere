@@ -5,8 +5,6 @@
 #include "chess_piece.h"
 
 
-//#include <iostream>
-
 
 ChessPiece* ChessPiece1() 
 {
