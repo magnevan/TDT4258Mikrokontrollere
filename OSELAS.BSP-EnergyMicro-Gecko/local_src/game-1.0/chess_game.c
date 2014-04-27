@@ -159,6 +159,7 @@ void movePiece(Player* player, ChessBoard* board, ChessView* view, short* map, i
 
                 }
                 // checks if move is valid before moving
+<<<<<<< HEAD
 		bool bigcastle=false;
 		bool smallcastle=false;
                 if (validMove(board, (*cellTo),piece)) {
@@ -209,6 +210,10 @@ void movePiece(Player* player, ChessBoard* board, ChessView* view, short* map, i
 		}
 		    bigcastle=false;
 		    smallcastle=false;
+=======
+                if (validMove(board, (*cellTo),piece)) {
+                    movePlayerPieceTo((*cellFrom), (*cellTo), board);
+>>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
                     (*piece).moved++;
                     pieceNotMoved = false;
                     break;
@@ -226,9 +231,13 @@ void movePiece(Player* player, ChessBoard* board, ChessView* view, short* map, i
         return;
     }
 
+<<<<<<< HEAD
     pieceMoved(player, cellFrom, cellTo, board);
 //this is a quickfix for a displaybug on efm33gg related to castling
  
+=======
+    pieceMoved(player, cellFrom, cellTo);
+>>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
     free(cellFrom);
     free(cellTo);
 } // end of method movePiece(Player & player, ChessBoard * board)

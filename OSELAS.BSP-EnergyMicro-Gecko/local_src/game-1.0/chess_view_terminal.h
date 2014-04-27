@@ -25,7 +25,11 @@ Cell* getCellFromPlayer(char* msg, bool pieceChosen, ChessView* view, Player* pl
 // Gir beskjed at denne cellen ikke kan velges.
 void invalidCell(char* msg, Cell* cell);
 
+<<<<<<< HEAD
 void pieceMoved(Player* player, Cell* from, Cell* to, ChessBoard* board);
+=======
+void pieceMoved(Player* player, Cell* from, Cell* to);
+>>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
 
 // Printer meldinger på skjermen
 void printMsg(char* msg);
