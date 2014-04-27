@@ -35,12 +35,7 @@ void initializeRound(short* map, int fd)
         }
         row--;
     }
-<<<<<<< HEAD
 
-=======
-    munmap(map,FILESIZE);
-    close(fd);
->>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
 
 }
 
@@ -212,12 +207,8 @@ void invalidCell(char* msg, Cell* cell)
 
 }
 
-<<<<<<< HEAD
 
 void pieceMoved(Player* player, Cell* from, Cell* to, ChessBoard* board)
-=======
-void pieceMoved(Player* player, Cell* from, Cell* to)
->>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
 {
     int fd = open(FILEPATH, O_RDWR);
     if (fd == -1) {
@@ -240,11 +231,7 @@ void pieceMoved(Player* player, Cell* from, Cell* to)
     printf("\n");
 
     printpiece(map, fd, type, color, to->colum, to->rowum);
-<<<<<<< HEAD
    
-=======
-
->>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
     munmap(map,FILESIZE);
     close(fd);
 }
@@ -282,11 +269,7 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
 
         if(!pieceChosen)
         {
-<<<<<<< HEAD
             printf("Scroll through pieces by sw1 and sw3. Your king is the currently selected piece. Write 8 to confirm a selection. ");//change to suitable buttons
-=======
-            printf("Scroll through pieces by writing 1 and -1. Your king is the currently selected piece. Write 8 to confirm a selection. ");//change to suitable buttons
->>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
             pieces=getPieces(getPlayerColor(player),board);
             while(true)
             {
@@ -302,11 +285,7 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
                 else if(input == 3 && counter<((*board).pieceslength[getPlayerColor(player)]-1))
                     counter++;
                 else
-<<<<<<< HEAD
                     printf("Invalid input. Chose a new input\n");
-=======
-                    printf("Invalid input. Write 1 or -1 to choose a piece\n");
->>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
                 pieceType type = pieces[counter] != 0 ? getType(pieces[counter]) : EMPTY;
 
                 printmarker(map, fd, 0, col, row);
@@ -331,11 +310,7 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
         }
         else
         {
-<<<<<<< HEAD
             printf("Scroll through all possile moves of your selected piece by sw1 and sw3. Press sw8 to confirm selection. Press sw7 to select a new piece and abort. \n ");//change to suitable buttons
-=======
-            printf("Scroll through all possile moves of your selected piece by writing 1 and -1. Write 8 to confirm a selection. Write 9 to abort selection\n ");//change to suitable buttons
->>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
             piece = getPiece((*cellFrom).colum, (*cellFrom).rowum);
             int length=0;
             Cell* moves = getPossibleMoves(board,piece,&length);
@@ -356,13 +331,8 @@ Cell* askPlayerForACell(bool pieceChosen,Player* player, ChessBoard* board,Cell*
                 else if(input == 3&&counter<(length-1))//replace input1 check with buttoncheck
                     counter++;
                 else
-<<<<<<< HEAD
                     printf("Invalid selection. use sw1 and sw3 to scroll through pieces\n");
                 printf("use sw7 to abort, sw8 to confirm\n");
-=======
-                    printf("Invalid selection. Write 1 or -1 to choose a where to move\n");
-                printf("write 9 to abort to chose new piece. Write 8 to confirm selection\n");
->>>>>>> b852708ee8ecbe9aab2db582913d7519427db7d1
 
                 printmarker(map, fd, 0, col, row);
 

@@ -10,7 +10,7 @@ struct Cell
 {
     int colum;
     int rowum;
-    //Cell() {}
+
 
 };
 

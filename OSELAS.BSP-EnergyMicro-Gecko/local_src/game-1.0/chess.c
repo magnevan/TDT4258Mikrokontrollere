@@ -2,7 +2,6 @@
 
 #include "chess_game.h"
 
-//#include <iostream>
 #include <string.h>
 
 int main(int argc, char* argv[])
@@ -10,7 +9,7 @@ int main(int argc, char* argv[])
     bool termPlayer1 = true;
     bool termView = true;
 
-    //  std::string arg;
+
     char* arg;
     int i;
     for (i = 1; i < argc; i++) {

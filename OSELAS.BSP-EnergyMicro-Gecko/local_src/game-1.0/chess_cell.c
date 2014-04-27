@@ -6,7 +6,7 @@ Cell* Cellinit(int c, int r) {
     (*cell).rowum=r;
     return cell;
 };//may have to move this
-bool cellequals(Cell cell1, Cell cell2)//operator==(const Cell & c)
+bool cellequals(Cell cell1, Cell cell2)
 {
     if(cell1.colum == cell2.colum && cell1.rowum == cell2.rowum)
         return true;
@@ -14,11 +14,11 @@ bool cellequals(Cell cell1, Cell cell2)//operator==(const Cell & c)
     return false;
 }
 
-bool nequals(Cell cell1, Cell cell2)//bool operator!=(const Cell & c)
+bool nequals(Cell cell1, Cell cell2)
 {
     if(cellequals(cell1,cell2))
         return false;
     else
         return true;
-    //return !(operator==(c));
+
 }
