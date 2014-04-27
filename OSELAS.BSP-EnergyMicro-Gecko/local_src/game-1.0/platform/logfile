@@ -1,0 +1,25 @@
+# vim: set fdm=marker fdl=1:
+{{{ 2014-04-16T18:34:29+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist clean game
+
+}}} 2014-04-16T18:34:29+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist clean game; (exit value: 1)
+
+
+
+{{{ 2014-04-16T18:34:59+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist images
+
+}}} 2014-04-16T18:34:59+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist images; (exit value: 1)
+
+
+
+{{{ 2014-04-17T22:13:50+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist clean game
+
+}}} 2014-04-17T22:13:50+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist clean game; (exit value: 1)
+
+
+
+{{{ 2014-04-18T20:43:00+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist images
+
+}}} 2014-04-18T20:43:00+0200 /opt/ex3/ptxdist-2013/lib/ptxdist-2013.07.1/bin/ptxdist images; (exit value: 1)
+
+
+
